@@ -16,8 +16,7 @@ class ObjectsFuncionalityClassifier {
         
         let request = VNCoreMLRequest(model: model) { (request, error) in
             if let results = request.results as? [VNClassificationObservation], let topResult = results.first {
-                // Añadir un umbral de confianza
-                if topResult.confidence > 0.6 {
+                if topResult.confidence > 0.95 {
                     let classificationResult = "Resultado: \(topResult.identifier) (\(Int(topResult.confidence * 100))%)"
                     DispatchQueue.main.async {
                         completion(classificationResult)
@@ -46,10 +45,4 @@ class ObjectsFuncionalityClassifier {
             }
         }
     }
-
-    
-    
 }
-   
-
-
