@@ -29,9 +29,22 @@
 		E8C42FFD2CB8552400DC8515 /* EcoLabUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EcoLabUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AF67381F2CB8951100E75B34 /* Exceptions for "EcoLab" folder in "EcoLab" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = E8C42FE22CB8552200DC8515 /* EcoLab */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E8C42FE52CB8552200DC8515 /* EcoLab */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AF67381F2CB8951100E75B34 /* Exceptions for "EcoLab" folder in "EcoLab" target */,
+			);
 			path = EcoLab;
 			sourceTree = "<group>";
 		};
@@ -396,9 +409,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EcoLab/Preview Content\"";
-				DEVELOPMENT_TEAM = 9BY9RQP8PP;
+				DEVELOPMENT_TEAM = 3N56WPS22Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EcoLab/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -425,9 +439,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"EcoLab/Preview Content\"";
-				DEVELOPMENT_TEAM = 9BY9RQP8PP;
+				DEVELOPMENT_TEAM = 3N56WPS22Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EcoLab/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
