@@ -21,29 +21,44 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var recentResults: [String] = []
     private let maxResultsCount = 10
 
+    // Añadimos un semáforo para limitar el procesamiento de frames
+    private var frameProcessingSemaphore = DispatchSemaphore(value: 1)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
     }
 
     func setupCamera() {
-        guard let device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .back).devices.first else {
+        guard let device = AVCaptureDevice.default(for: .video) else {
             onClassificationResult?("No se pudo detectar la cámara.")
             return
         }
         
         do {
             let cameraInput = try AVCaptureDeviceInput(device: device)
-            captureSession.addInput(cameraInput)
+            if captureSession.canAddInput(cameraInput) {
+                captureSession.addInput(cameraInput)
+            } else {
+                onClassificationResult?("No se pudo agregar la entrada de la cámara.")
+                return
+            }
         } catch {
-            onClassificationResult?("Error al configurar la cámara.")
+            onClassificationResult?("Error al configurar la cámara: \(error.localizedDescription)")
             return
         }
         
-        videoDataOutput.videoSettings = [(kCVPixelBufferPixelFormatTypeKey as NSString): NSNumber(value: kCVPixelFormatType_32BGRA)] as [String: Any]
+        videoDataOutput.videoSettings = [
+            (kCVPixelBufferPixelFormatTypeKey as String): NSNumber(value: kCVPixelFormatType_32BGRA)
+        ]
         videoDataOutput.alwaysDiscardsLateVideoFrames = true
         videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "camera_frame_processing_queue"))
-        captureSession.addOutput(videoDataOutput)
+        if captureSession.canAddOutput(videoDataOutput) {
+            captureSession.addOutput(videoDataOutput)
+        } else {
+            onClassificationResult?("No se pudo agregar la salida de video.")
+            return
+        }
         
         guard let connection = videoDataOutput.connection(with: .video), connection.isVideoOrientationSupported else {
             return
@@ -61,38 +76,52 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
 
     func startCamera() {
-        captureSession.startRunning()
+        if !captureSession.isRunning {
+            captureSession.startRunning()
+        }
     }
 
     func stopCamera() {
-        captureSession.stopRunning()
+        if captureSession.isRunning {
+            captureSession.stopRunning()
+        }
     }
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            debugPrint("Unable to get image from the sample buffer")
-            return
-        }
-        let ciImage = CIImage(cvPixelBuffer: frame)
-        ObjectsFuncionalityClassifier.shared.classifyBottleImage(image: ciImage) { result in
-            DispatchQueue.main.async {
-                self.updateRecentResults(with: result)
+        // Limitar el procesamiento a un frame a la vez
+        if frameProcessingSemaphore.wait(timeout: .now()) == .success {
+            defer { frameProcessingSemaphore.signal() }
+
+            guard let frame = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+                debugPrint("No se pudo obtener la imagen del buffer de muestra")
+                return
+            }
+            let ciImage = CIImage(cvPixelBuffer: frame)
+
+            // Llamar a la función de detección y clasificación
+            ObjectsFunctionalityClassifier.shared.detectAndClassifyBottleImage(image: ciImage) { results in
+                DispatchQueue.main.async {
+                    self.updateRecentResults(with: results)
+                }
             }
         }
     }
 
-    private func updateRecentResults(with result: String) {
+    private func updateRecentResults(with results: [String]) {
+        // Combina los resultados en una sola cadena
+        let combinedResult = results.joined(separator: "\n")
+        
         if recentResults.count >= maxResultsCount {
             recentResults.removeFirst()
         }
-        recentResults.append(result)
+        recentResults.append(combinedResult)
         
         let mostFrequentResult = recentResults.mostFrequent()
         onClassificationResult?(mostFrequentResult ?? "No se pudo clasificar la imagen.")
     }
 }
 
-
+// Extensión para encontrar el elemento más frecuente en un arreglo de cadenas
 extension Array where Element == String {
     func mostFrequent() -> String? {
         let counts = self.reduce(into: [:]) { counts, word in
@@ -101,4 +130,3 @@ extension Array where Element == String {
         return counts.max { $0.value < $1.value }?.key
     }
 }
-
