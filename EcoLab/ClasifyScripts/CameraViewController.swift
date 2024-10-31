@@ -23,6 +23,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private var recentResults: [String] = []
     private let maxResultsCount = 10
     private var frameProcessingSemaphore = DispatchSemaphore(value: 1)
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
