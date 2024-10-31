@@ -97,16 +97,9 @@ class ObjectsFunctionalityClassifier {
                 return
             }
             
-            if let results = request.results as? [VNClassificationObservation] {
-                // Obtener las dos mejores clasificaciones
-                let topResults = results.prefix(2)
-                if let bestResult = topResults.first, bestResult.confidence > 0.8 {
-                    completion("Resultado: \(bestResult.identifier) (\(Int(bestResult.confidence * 100))%)")
-                } else if let secondBestResult = topResults.last, abs(bestResult.confidence - secondBestResult.confidence) < 0.1 {
-                    completion("Clasificación indeterminada entre \(bestResult.identifier) y \(secondBestResult.identifier).")
-                } else {
-                    completion("Clasificación con baja confianza.")
-                }
+            if let results = request.results as? [VNClassificationObservation], let topResult = results.first {
+                let classificationResult = "Resultado: \(topResult.identifier) (\(Int(topResult.confidence * 100))%)"
+                completion(classificationResult)
             } else {
                 completion("No se pudo clasificar la botella.")
             }

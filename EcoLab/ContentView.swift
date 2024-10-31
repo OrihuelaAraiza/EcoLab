@@ -4,53 +4,81 @@ import Vision
 import AVFoundation
 
 struct ContentView: View {
-    @State private var classificationResult: String = "Clasifica una imagen"
-    @State private var isCameraRunning: Bool = false
-    private let cameraViewController = CameraViewController()
+    @State private var showChecklist = true
+    @State private var showCamera = false
+    @State private var showAR = false
+    @State private var classificationResult: String = ""
 
     var body: some View {
-        ZStack {
-            CameraView(cameraViewController: cameraViewController)
-                .edgesIgnoringSafeArea(.all)
+        VStack {
+            if showChecklist {
+                ZStack {
+                    CameraView(cameraViewController: CameraViewController(), onClassificationResult: { _ in })
+                        .blur(radius: 5)
+                        .overlay(Color.black.opacity(0.4)) // Superposición para oscurecer un poco el fondo
 
-            VStack {
-                Text(classificationResult)
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding()
-
-                Spacer()
-
-                Button(action: toggleCamera) {
-                    Text(isCameraRunning ? "Detener Clasificación" : "Iniciar Clasificación en Tiempo Real")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                    ChecklistView(onAllItemsChecked: {
+                        showChecklist = false
+                        showCamera = true
+                    })
                 }
-                .padding(.bottom, 50)
-            }
-        }
-        .onAppear {
-            cameraViewController.onClassificationResult = { result in
-                classificationResult = result
+            } else if showCamera {
+                ZStack {
+                    CameraView(cameraViewController: CameraViewController(), onClassificationResult: { result in
+                        classificationResult = result
+                        if result.contains("La botella está en buenas condiciones") {
+                            showCamera = false
+                            showAR = true
+                        } else {
+                            print("Botella en mal estado")
+                        }
+                    })
+                    .blur(radius: 5)
+                    .overlay(Color.black.opacity(0.5))
+
+                    VStack {
+                        Text("Filtro de agua")
+                            .font(.title)
+                            .foregroundColor(.white)
+                        Text("Hecho en casa")
+                            .font(.subheadline)
+                            .foregroundColor(.white)
+
+                        Spacer()
+
+                        HStack {
+                            Button("Retroceder") {
+                                showCamera = false
+                                showChecklist = true
+                            }
+                            .padding()
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+
+                            Spacer()
+
+                            Button("Avanzar") {
+                                if classificationResult.contains("La botella está en buenas condiciones") {
+                                    showCamera = false
+                                    showAR = true
+                                } else {
+                                    print("Botella en mal estado")
+                                }
+                            }
+                            .padding()
+                            .background(Color.black)
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                        }
+                        .padding(.horizontal, 40)
+                    }
+                    .padding()
+                }
+            } else if showAR {
+                ARViewContainer()
+                    .edgesIgnoringSafeArea(.all)
             }
         }
     }
-
-    func toggleCamera() {
-        if isCameraRunning {
-            cameraViewController.stopCamera()
-        } else {
-            cameraViewController.startCamera()
-        }
-        isCameraRunning.toggle()
-    }
-}
-
-
-#Preview {
-    ContentView()
 }

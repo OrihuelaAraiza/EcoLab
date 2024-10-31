@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AFE6D0972CD2F64300DB0A0E /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE6D0962CD2F64100DB0A0E /* ARViewContainer.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		E8C42FF42CB8552400DC8515 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AFE6D0962CD2F64100DB0A0E /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
 		E8C42FE32CB8552200DC8515 /* EcoLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EcoLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8C42FF32CB8552400DC8515 /* EcoLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EcoLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8C42FFD2CB8552400DC8515 /* EcoLabUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EcoLabUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +97,7 @@
 				E8C42FF62CB8552400DC8515 /* EcoLabTests */,
 				E8C430002CB8552400DC8515 /* EcoLabUITests */,
 				E8C42FE42CB8552200DC8515 /* Products */,
+				AFE6D0962CD2F64100DB0A0E /* ARViewContainer.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -249,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFE6D0972CD2F64300DB0A0E /* ARViewContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

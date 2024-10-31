@@ -5,8 +5,10 @@ import AVFoundation
 
 struct CameraView: UIViewControllerRepresentable {
     let cameraViewController: CameraViewController
+    let onClassificationResult: (String) -> Void
 
     func makeUIViewController(context: Context) -> CameraViewController {
+        cameraViewController.onClassificationResult = onClassificationResult
         return cameraViewController
     }
 
@@ -20,13 +22,16 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     var onClassificationResult: ((String) -> Void)?
     private var recentResults: [String] = []
     private let maxResultsCount = 10
-
-    // Añadimos un semáforo para limitar el procesamiento de frames
     private var frameProcessingSemaphore = DispatchSemaphore(value: 1)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCamera()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        startCamera()
     }
 
     func setupCamera() {
@@ -53,6 +58,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         ]
         videoDataOutput.alwaysDiscardsLateVideoFrames = true
         videoDataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "camera_frame_processing_queue"))
+        
         if captureSession.canAddOutput(videoDataOutput) {
             captureSession.addOutput(videoDataOutput)
         } else {
@@ -65,7 +71,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         }
         
         connection.videoOrientation = .portrait
-        
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
     }
@@ -88,7 +93,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        // Limitar el procesamiento a un frame a la vez
         if frameProcessingSemaphore.wait(timeout: .now()) == .success {
             defer { frameProcessingSemaphore.signal() }
 
@@ -98,7 +102,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             }
             let ciImage = CIImage(cvPixelBuffer: frame)
 
-            // Llamar a la función de detección y clasificación
             ObjectsFunctionalityClassifier.shared.detectAndClassifyBottleImage(image: ciImage) { results in
                 DispatchQueue.main.async {
                     self.updateRecentResults(with: results)
@@ -108,7 +111,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
 
     private func updateRecentResults(with results: [String]) {
-        // Combina los resultados en una sola cadena
         let combinedResult = results.joined(separator: "\n")
         
         if recentResults.count >= maxResultsCount {
@@ -121,7 +123,6 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     }
 }
 
-// Extensión para encontrar el elemento más frecuente en un arreglo de cadenas
 extension Array where Element == String {
     func mostFrequent() -> String? {
         let counts = self.reduce(into: [:]) { counts, word in
