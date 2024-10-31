@@ -10,43 +10,58 @@ struct ChecklistView: View {
     var onAllItemsChecked: (() -> Void)?
 
     var body: some View {
-        VStack {
-            Text("Asegúrate de tener los materiales")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-
-            List {
-                ForEach($items) { $item in
-                    HStack {
-                        Text(item.name)
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.white.opacity(0.6))
+                .frame(width: 300, height: 400)
+                .overlay(
+                    VStack {
+                        Text("Asegúrate de tener los materiales")
+                            .font(.headline)
                             .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding(.top, 20)
+
                         Spacer()
-                        Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
-                            .foregroundColor(.white)
-                            .onTapGesture {
-                                item.isChecked.toggle()
-                                checkIfAllItemsChecked()
-                            }
-                    }
-                }
-                .listRowBackground(Color.black.opacity(0.4)) // Fondo oscuro en cada fila para mejorar visibilidad
-            }
-            .background(Color.clear) // Fondo transparente para la lista
 
-            Button(action: {
-                onAllItemsChecked?()
-            }) {
-                Text("Continuar")
-                    .font(.title2)
+                        ForEach($items) { $item in
+                            HStack {
+                                Text(item.name)
+                                    .foregroundColor(.white)
+                                    .padding(.leading)
+                                Spacer()
+                                Image(systemName: item.isChecked ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(.white)
+                                    .onTapGesture {
+                                        item.isChecked.toggle()
+                                        checkIfAllItemsChecked()
+                                    }
+                                    .padding(.trailing)
+                            }
+                            .padding(.vertical, 8)
+                        }
+
+                        Spacer()
+
+                        Button(action: {
+                            onAllItemsChecked?()
+                        }) {
+                            Text("Continuar")
+                                .font(.title2)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 20)
+                        .disabled(!items.allSatisfy { $0.isChecked })
+                    }
                     .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            .disabled(!items.allSatisfy { $0.isChecked })
-            .padding()
+                )
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private func checkIfAllItemsChecked() {
