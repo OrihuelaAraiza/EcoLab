@@ -6,24 +6,23 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // Cámara en el fondo, siempre activa
             CameraView(cameraViewController: cameraViewController, onClassificationResult: { detectionPhase in
                 // Manejo de resultados de clasificación si es necesario
             })
             .blur(radius: 5)
             .ignoresSafeArea()
 
-            // Superposición translúcida
-            Color.black.opacity(0.5)
+            Color.black.opacity(0.7)
                 .ignoresSafeArea()
 
             if showProyectsMenu {
-                // Mostrar ProyectsMenuView
                 ProyectsMenuView(showProyectsMenu: $showProyectsMenu)
+                    .transition(.opacity)
             } else {
-                // Mostrar el menú principal
                 MainMenuView(showProyectsMenu: $showProyectsMenu)
+                    .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.7), value: showProyectsMenu)
     }
 }

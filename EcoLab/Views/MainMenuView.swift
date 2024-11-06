@@ -4,26 +4,24 @@ struct MainMenuView: View {
     @Binding var showProyectsMenu: Bool
 
     var body: some View {
-        // Menú centrado
         ZStack {
-            // Fondo del menú
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.black.opacity(0.4))
-                .frame(width: 600, height: 350) // Ajusta el tamaño según tus necesidades
+                .frame(width: 600, height: 350)
 
             HStack {
-                // Logo o icono en el lado izquierdo
+
                 Image("EcoLabIcon")
                     .resizable()
                     .frame(width: 200, height: 200)
                     .padding()
 
-                // Botones en el lado derecho
                 VStack(spacing: 20) {
                     HStack(spacing: 20) {
-                        // Botón "Proyectos"
                         Button(action: {
-                            showProyectsMenu = true
+                            withAnimation{
+                                showProyectsMenu = true
+                            }
                         }) {
                             ButtonContent(imageName: "LearningIcon", title: "Proyectos")
                         }
@@ -31,7 +29,6 @@ struct MainMenuView: View {
                         .background(Color.white)
                         .cornerRadius(10)
 
-                        // Botón "Aprende"
                         Button(action: {
                             // Acción para el botón "Aprende"
                         }) {
@@ -43,7 +40,6 @@ struct MainMenuView: View {
                     }
 
                     HStack(spacing: 20) {
-                        // Botón "Próximamente"
                         Button(action: {
                             // Acción para el botón "Próximamente"
                         }) {
@@ -53,7 +49,6 @@ struct MainMenuView: View {
                         .background(Color.white)
                         .cornerRadius(10)
 
-                        // Botón "Info"
                         Button(action: {
                             // Acción para el botón "Info"
                         }) {

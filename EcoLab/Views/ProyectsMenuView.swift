@@ -52,7 +52,9 @@ struct ProyectsMenuView: View {
                     }
 
                     Button(action: {
-                        showProyectsMenu = false
+                        withAnimation {
+                            showProyectsMenu = false
+                        }
                     }) {
                         Text("Regresar")
                             .foregroundColor(.black)
