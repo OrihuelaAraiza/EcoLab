@@ -10,7 +10,6 @@ struct ContentView: View {
     @State private var showBottleCheck = false
     @State private var showCamera = false
     @State private var showAR = false
-    @State private var classificationResult: String = ""
 
     // Camera view controller que mantiene la sesión activa
     private let cameraViewController = CameraViewController()
@@ -18,8 +17,8 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             // Cámara en el fondo, siempre encendida
-            CameraView(cameraViewController: cameraViewController, onClassificationResult: { result in
-                classificationResult = result
+            CameraView(cameraViewController: cameraViewController, onClassificationResult: { detectionPhase in
+                // Puedes manejar el resultado de la clasificación aquí si es necesario
             })
             .blur(radius: 5)
             .ignoresSafeArea()
@@ -60,7 +59,7 @@ struct ContentView: View {
                             showCamera = false
                             showBottleCheck = true
                         },
-                        classificationResult: classificationResult
+                        cameraViewController: cameraViewController
                     )
                     .transition(.opacity)
                 } else if showAR {
@@ -68,14 +67,6 @@ struct ContentView: View {
                         .ignoresSafeArea()
                 }
             }
-        }
-        .onAppear {
-            // Iniciar la cámara al iniciar la app
-            cameraViewController.startCamera()
-        }
-        .onDisappear {
-            // Detener la cámara solo cuando la app sale por completo
-            cameraViewController.stopCamera()
         }
     }
 }

@@ -2,6 +2,32 @@ import CoreML
 import Vision
 import SwiftUI
 
+enum BottleCondition: Equatable, Hashable {
+    case good
+    case bad
+    case unknown
+    case error(String)
+
+    var numericValue: Int {
+        switch self {
+        case .good:
+            return 1
+        case .bad:
+            return -1
+        default:
+            return 0
+        }
+    }
+}
+
+enum DetectionPhase: Hashable {
+    case checkingForBottle
+    case bottleDetected
+    case noBottleDetected
+    case conditionChecked(BottleCondition)
+    case error(String)
+}
+
 class ObjectsFunctionalityClassifier {
     static let shared = ObjectsFunctionalityClassifier()
     
@@ -27,81 +53,92 @@ class ObjectsFunctionalityClassifier {
         }
     }()
     
-    func detectAndClassifyBottleImage(image: CIImage, completion: @escaping ([String]) -> Void) {
+    func detectAndClassifyBottleImage(image: CIImage, completion: @escaping (DetectionPhase) -> Void) {
         guard let detectionModel = detectionModel else {
-            completion(["No se pudo cargar el modelo de detección"])
+            completion(.error("No se pudo cargar el modelo de detección"))
             return
         }
         
-        // Solicitud de detección de objetos
         let detectionRequest = VNCoreMLRequest(model: detectionModel) { (request, error) in
             if let error = error {
                 print("Error en la detección: \(error)")
-                completion(["Error en la detección: \(error.localizedDescription)"])
+                completion(.error("Error en la detección: \(error.localizedDescription)"))
                 return
             }
             
             guard let results = request.results as? [VNRecognizedObjectObservation], !results.isEmpty else {
-                completion(["No se detectaron botellas en la imagen."])
+                completion(.noBottleDetected)
                 return
             }
             
-            var classifications: [String] = []
+            // Botella detectada
+            var classificationResults: [(BottleCondition, Float)] = []
             let dispatchGroup = DispatchGroup()
             
             for observation in results {
                 dispatchGroup.enter()
                 
-                // Obtener el bounding box y recortar la imagen
                 let boundingBox = observation.boundingBox
                 let croppedImage = self.cropImage(image: image, boundingBox: boundingBox)
                 
-                // Clasificar la imagen recortada
-                self.classifyCroppedImage(image: croppedImage) { classificationResult in
-                    classifications.append(classificationResult)
+                self.classifyCroppedImage(image: croppedImage) { classificationResult, confidence in
+                    classificationResults.append((classificationResult, confidence))
                     dispatchGroup.leave()
                 }
             }
             
-            // Esperar a que todas las clasificaciones terminen
             dispatchGroup.notify(queue: .main) {
-                completion(classifications)
+                let totalConfidence = classificationResults.reduce(0) { $0 + $1.1 * Float($1.0.numericValue) }
+                let averageConfidence = totalConfidence / Float(classificationResults.count)
+                let finalCondition: BottleCondition = averageConfidence >= 0 ? .good : .bad
+                completion(.conditionChecked(finalCondition))
             }
         }
         
-        // Ejecutar la solicitud de detección
         let handler = VNImageRequestHandler(ciImage: image, options: [:])
-        DispatchQueue.global(qos: .userInitiated).async {
-            do {
-                try handler.perform([detectionRequest])
-            } catch {
-                print("Error al realizar la detección: \(error)")
-                DispatchQueue.main.async {
-                    completion(["Error al realizar la detección: \(error.localizedDescription)"])
-                }
-            }
+        do {
+            try handler.perform([detectionRequest])
+        } catch {
+            print("Error al realizar la detección: \(error)")
+            completion(.error("Error al realizar la detección: \(error.localizedDescription)"))
         }
     }
     
-    // Función para clasificar una imagen recortada
-    private func classifyCroppedImage(image: CIImage, completion: @escaping (String) -> Void) {
+    private func classifyCroppedImage(image: CIImage, completion: @escaping (BottleCondition, Float) -> Void) {
         guard let classificationModel = classificationModel else {
-            completion("No se pudo cargar el modelo de clasificación")
+            completion(.unknown, 0)
             return
         }
         
         let classificationRequest = VNCoreMLRequest(model: classificationModel) { (request, error) in
             if let error = error {
                 print("Error en la clasificación: \(error)")
-                completion("Error en la clasificación: \(error.localizedDescription)")
+                completion(.unknown, 0)
                 return
             }
             
             if let results = request.results as? [VNClassificationObservation], let topResult = results.first {
-                let classificationResult = "Resultado: \(topResult.identifier) (\(Int(topResult.confidence * 100))%)"
-                completion(classificationResult)
+                if topResult.identifier == "itWorks" {
+                    if topResult.confidence > 0.9 {
+                        completion(.good, topResult.confidence)
+                    } else if topResult.confidence > 0.7 {
+                        completion(.unknown, topResult.confidence)
+                    } else {
+                        completion(.unknown, topResult.confidence)
+                    }
+                } else if topResult.identifier == "doesntWork" {
+                    if topResult.confidence > 0.9 {
+                        completion(.bad, topResult.confidence)
+                    } else if topResult.confidence > 0.7 {
+                        completion(.unknown, topResult.confidence)
+                    } else {
+                        completion(.unknown, topResult.confidence)
+                    }
+                } else {
+                    completion(.unknown, topResult.confidence)
+                }
             } else {
-                completion("No se pudo clasificar la botella.")
+                completion(.unknown, 0)
             }
         }
         
@@ -110,20 +147,16 @@ class ObjectsFunctionalityClassifier {
             try handler.perform([classificationRequest])
         } catch {
             print("Error al realizar la clasificación: \(error)")
-            completion("Error al realizar la clasificación: \(error.localizedDescription)")
+            completion(.unknown, 0)
         }
     }
     
-    // Función para recortar la imagen usando el bounding box
     private func cropImage(image: CIImage, boundingBox: CGRect) -> CIImage {
         let imageSize = image.extent.size
         let x = boundingBox.origin.x * imageSize.width
         let y = (1.0 - boundingBox.origin.y - boundingBox.size.height) * imageSize.height
         let width = boundingBox.size.width * imageSize.width
         let height = boundingBox.size.height * imageSize.height
-        let rect = CGRect(x: x, y: y, width: width, height: height)
-        
-        let croppedImage = image.cropped(to: rect)
-        return croppedImage
+        return image.cropped(to: CGRect(x: x, y: y, width: width, height: height))
     }
 }
