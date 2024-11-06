@@ -91,7 +91,10 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             return
         }
 
-        connection.videoOrientation = .portrait
+        // Cambiar la orientación a landscape
+        connection.videoOrientation = .landscapeRight // o .landscapeLeft
+        previewLayer.connection?.videoOrientation = .landscapeRight // o .landscapeLeft
+
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
     }
@@ -168,4 +171,3 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         shouldProcessFrames = true
     }
 }
-
