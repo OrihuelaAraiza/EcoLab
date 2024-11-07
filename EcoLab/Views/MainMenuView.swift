@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MainMenuView: View {
     @Binding var showProyectsMenu: Bool
+    @EnvironmentObject var appSettings: AppSettings
 
     var body: some View {
         ZStack {
@@ -15,6 +16,12 @@ struct MainMenuView: View {
                     .resizable()
                     .frame(width: 200, height: 200)
                     .padding()
+                    .gesture(
+                        TapGesture(count: 3).onEnded{
+                            appSettings.isDeveloperMode.toggle()
+                            print("Modo Desarrollador: \(appSettings.isDeveloperMode ? "Activado" : "Desactivado")")
+                        }
+                    )
 
                 VStack(spacing: 20) {
                     HStack(spacing: 20) {

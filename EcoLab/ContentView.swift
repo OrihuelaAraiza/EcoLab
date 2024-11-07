@@ -6,9 +6,9 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            CameraView(cameraViewController: cameraViewController, onClassificationResult: { detectionPhase in
+            CameraView(cameraViewController: cameraViewController, onBottleClassificationResult: { detectionPhase in
                 // Manejo de resultados de clasificación si es necesario
-            })
+            }, onBucketClassificationResult: nil)
             .blur(radius: 5)
             .ignoresSafeArea()
 

@@ -7,10 +7,12 @@ import AVFoundation
 
 struct CameraView: UIViewControllerRepresentable {
     let cameraViewController: CameraViewController
-    let onClassificationResult: (DetectionPhase) -> Void
+    let onBottleClassificationResult: ((BottleDetectionPhase) -> Void)?
+    let onBucketClassificationResult: ((BucketDetectionPhase) -> Void)?
 
     func makeUIViewController(context: Context) -> CameraViewController {
-        cameraViewController.onClassificationResult = onClassificationResult
+        cameraViewController.onBottleClassificationResult = onBottleClassificationResult
+        cameraViewController.onBucketClassificationResult = onBucketClassificationResult
         return cameraViewController
     }
 
@@ -26,18 +28,27 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     private lazy var previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
 
     // Closure para pasar el resultado de la clasificación a la vista SwiftUI
-    var onClassificationResult: ((DetectionPhase) -> Void)?
+    var onBottleClassificationResult: ((BottleDetectionPhase) -> Void)?
+    var onBucketClassificationResult: ((BucketDetectionPhase) -> Void)?
 
     // Semáforo para controlar el procesamiento de frames
     private var frameProcessingSemaphore = DispatchSemaphore(value: 1)
 
-    // Variables para estabilizar la clasificación
+    // Variables para estabilizar la clasificación de botellas
     private var currentCondition: BottleCondition = .unknown
     private var conditionStreak: Int = 0
-    private let requiredStreak: Int = 5 // Número de frames consecutivos para cambiar de estado
+    private let requiredStreak: Int = 5
+
+    // Variables para estabilizar la clasificación de cubetas
+    private var currentBucketCondition: BucketCondition = .unknown
+    private var bucketConditionStreak: Int = 0
+    private let requiredBucketStreak: Int = 5
 
     // Variable para controlar si se deben procesar frames
     private var shouldProcessFrames = true
+
+    // Variable para indicar si se está detectando cubetas
+    var detectingBucket: Bool = false // Por defecto, detectamos botellas
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +68,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
     // Configuración de la cámara
     func setupCamera() {
         guard let device = AVCaptureDevice.default(for: .video) else {
-            onClassificationResult?(.error("No se pudo detectar la cámara."))
+            onBottleClassificationResult?(.error("No se pudo detectar la cámara."))
             return
         }
 
@@ -66,11 +77,11 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             if captureSession.canAddInput(cameraInput) {
                 captureSession.addInput(cameraInput)
             } else {
-                onClassificationResult?(.error("No se pudo agregar la entrada de la cámara."))
+                onBottleClassificationResult?(.error("No se pudo agregar la entrada de la cámara."))
                 return
             }
         } catch {
-            onClassificationResult?(.error("Error al configurar la cámara: \(error.localizedDescription)"))
+            onBottleClassificationResult?(.error("Error al configurar la cámara: \(error.localizedDescription)"))
             return
         }
 
@@ -83,7 +94,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         if captureSession.canAddOutput(videoDataOutput) {
             captureSession.addOutput(videoDataOutput)
         } else {
-            onClassificationResult?(.error("No se pudo agregar la salida de video."))
+            onBottleClassificationResult?(.error("No se pudo agregar la salida de video."))
             return
         }
 
@@ -98,6 +109,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.addSublayer(previewLayer)
     }
+    
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -110,8 +122,7 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             captureSession.startRunning()
         }
     }
-
-    // Detener la cámara
+    
     func stopCamera() {
         if captureSession.isRunning {
             captureSession.stopRunning()
@@ -131,17 +142,25 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             }
             let ciImage = CIImage(cvPixelBuffer: frame)
 
-            // Llamar al clasificador para detectar y clasificar la botella
-            ObjectsFunctionalityClassifier.shared.detectAndClassifyBottleImage(image: ciImage) { detectionPhase in
-                DispatchQueue.main.async {
-                    self.updateClassificationResult(with: detectionPhase)
+            if detectingBucket {
+                // Llamar al clasificador para detectar y clasificar la cubeta
+                ObjectsFunctionalityClassifier.shared.detectAndClassifyBucketImage(image: ciImage) { detectionPhase in
+                    DispatchQueue.main.async {
+                        self.updateBucketClassificationResult(with: detectionPhase)
+                    }
+                }
+            } else {
+                // Llamar al clasificador para detectar y clasificar la botella
+                ObjectsFunctionalityClassifier.shared.detectAndClassifyBottleImage(image: ciImage) { detectionPhase in
+                    DispatchQueue.main.async {
+                        self.updateBottleClassificationResult(with: detectionPhase)
+                    }
                 }
             }
         }
     }
 
-    // Actualizar el resultado de la clasificación con lógica de histéresis
-    private func updateClassificationResult(with detectionPhase: DetectionPhase) {
+    private func updateBottleClassificationResult(with detectionPhase: BottleDetectionPhase) {
         if case .conditionChecked(let condition) = detectionPhase {
             if condition == currentCondition {
                 conditionStreak += 1
@@ -151,22 +170,42 @@ class CameraViewController: UIViewController, AVCaptureVideoDataOutputSampleBuff
             }
 
             if conditionStreak >= requiredStreak {
-                onClassificationResult?(.conditionChecked(currentCondition))
+                onBottleClassificationResult?(.conditionChecked(currentCondition))
             }
         } else {
             // Si el estado es diferente a una condición de botella, reiniciar el contador
             conditionStreak = 0
             currentCondition = .unknown
-            onClassificationResult?(detectionPhase)
+            onBottleClassificationResult?(detectionPhase)
         }
     }
 
-    // Método para detener el procesamiento de frames
+    // Actualizar el resultado de la clasificación de cubetas
+    private func updateBucketClassificationResult(with detectionPhase: BucketDetectionPhase) {
+        if case .conditionChecked(let condition) = detectionPhase {
+            if condition == currentBucketCondition {
+                bucketConditionStreak += 1
+            } else {
+                currentBucketCondition = condition
+                bucketConditionStreak = 1
+            }
+
+            if bucketConditionStreak >= requiredBucketStreak {
+                onBucketClassificationResult?(.conditionChecked(currentBucketCondition))
+            }
+        } else {
+            // Si el estado es diferente, reiniciar el contador
+            bucketConditionStreak = 0
+            currentBucketCondition = .unknown
+            onBucketClassificationResult?(detectionPhase)
+        }
+    }
+
+    // Métodos para controlar el procesamiento de frames
     func stopProcessingFrames() {
         shouldProcessFrames = false
     }
 
-    // Método para reanudar el procesamiento de frames (si es necesario)
     func startProcessingFrames() {
         shouldProcessFrames = true
     }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProyectsMenuView: View {
     @Binding var showProyectsMenu: Bool
+    @State private var showWaterFilter = false // Nueva variable de estado
 
     var body: some View {
         ZStack {
@@ -11,10 +12,11 @@ struct ProyectsMenuView: View {
                     .frame(width: 600, height: 350)
 
                 VStack(spacing: 20) {
-                    
+
                     HStack(spacing: 20) {
                         Button(action: {
                             // Acción para "Filtro de agua"
+                            showWaterFilter = true
                         }) {
                             ButtonContent(imageName: "WaterIcon", title: "Filtro de agua")
                         }
@@ -66,6 +68,10 @@ struct ProyectsMenuView: View {
                 }
                 .padding()
             }
+        }
+        // Presentar WaterFilterView cuando showWaterFilter es true
+        .fullScreenCover(isPresented: $showWaterFilter) {
+            WaterFilterView()
         }
     }
 }
