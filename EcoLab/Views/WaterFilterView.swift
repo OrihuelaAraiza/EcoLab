@@ -3,7 +3,7 @@ import CoreML
 import Vision
 import AVFoundation
 
-struct WaterFilter: View {
+struct WaterFilterView: View {
     @State private var showIntro = true
     @State private var showMaterialInfo = false
     @State private var showChecklist = false
@@ -47,7 +47,7 @@ struct WaterFilter: View {
                     }
                     .transition(.opacity)
                 } else if showCamera {
-                    CameraDetectionView(
+                    BottleDetectionView(
                         onAdvance: {
                             showCamera = false
                             showAR = true

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct CameraDetectionView: View {
+struct BottleDetectionView: View {
     var onAdvance: () -> Void
     var onBack: () -> Void
     @State private var detectionStatus: DetectionStatus = .waitingForBottle
@@ -17,9 +17,12 @@ struct CameraDetectionView: View {
 
     var body: some View {
         ZStack {
-            CameraView(cameraViewController: cameraViewController, onClassificationResult: { detectionPhase in
-                handleClassificationResult(detectionPhase)
-            })
+            CameraView(
+                cameraViewController: cameraViewController,
+                onClassificationResult: { detectionPhase in
+                    handleClassificationResult(detectionPhase)
+                }
+            )
             .blur(radius: 5)
             .overlay(Color.black.opacity(0.5))
             .ignoresSafeArea()
@@ -70,11 +73,12 @@ struct CameraDetectionView: View {
                     .animation(.easeInOut, value: detectionStatus)
 
                 // Mensaje: Error
-                Text("Error: \(getErrorMessage() ?? "")")
-                    .font(.title2)
-                    .foregroundColor(.red)
-                    .opacity(getErrorMessage() != nil ? 1 : 0)
-                    .animation(.easeInOut, value: detectionStatus)
+                if let errorMessage = getErrorMessage() {
+                    Text("Error: \(errorMessage)")
+                        .font(.title2)
+                        .foregroundColor(.red)
+                        .animation(.easeInOut, value: detectionStatus)
+                }
 
                 Spacer()
 
@@ -103,6 +107,9 @@ struct CameraDetectionView: View {
             }
             .padding()
         }
+        .onAppear {
+            cameraViewController.startProcessingFrames()
+        }
     }
 
     private func handleClassificationResult(_ detectionPhase: DetectionPhase) {
@@ -130,23 +137,15 @@ struct CameraDetectionView: View {
     }
 
     private func getErrorMessage() -> String? {
-        switch detectionStatus {
-        case .error(let message):
+        if case .error(let message) = detectionStatus {
             return message
-        case .conditionChecked(let condition):
-            if case .error(let message) = condition {
-                return message
-            } else {
-                return nil
-            }
-        default:
-            return nil
         }
+        return nil
     }
 }
 
 extension DetectionPhase {
-    func toDetectionStatus() -> CameraDetectionView.DetectionStatus {
+    func toDetectionStatus() -> BottleDetectionView.DetectionStatus {
         switch self {
         case .checkingForBottle:
             return .waitingForBottle
@@ -161,4 +160,3 @@ extension DetectionPhase {
         }
     }
 }
-
