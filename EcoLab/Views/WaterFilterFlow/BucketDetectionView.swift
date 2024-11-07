@@ -1,17 +1,17 @@
 import SwiftUI
 
-struct BottleDetectionView: View {
+struct BucketDetectionView: View {
     var onAdvance: () -> Void
     var onBack: () -> Void
-    @State private var detectionStatus: DetectionStatus = .waitingForBottle
-    @State private var hasDetectedGoodCondition = false // Nueva variable
+    @State private var detectionStatus: DetectionStatus = .waitingForBucket
+    @State private var hasDetectedGoodCondition = false
     let cameraViewController: CameraViewController
 
     enum DetectionStatus: Equatable {
-        case waitingForBottle
-        case bottleLost
-        case bottleDetected
-        case conditionChecked(BottleCondition)
+        case waitingForBucket
+        case bucketLost
+        case bucketDetected
+        case conditionChecked(BucketCondition)
         case error(String)
     }
 
@@ -19,9 +19,10 @@ struct BottleDetectionView: View {
         ZStack {
             CameraView(
                 cameraViewController: cameraViewController,
-                onBottleClassificationResult: { detectionPhase in
+                onBottleClassificationResult: nil,
+                onBucketClassificationResult: { detectionPhase in
                     handleClassificationResult(detectionPhase)
-                }, onBucketClassificationResult: nil
+                }
             )
             .blur(radius: 5)
             .overlay(Color.black.opacity(0.5))
@@ -30,49 +31,45 @@ struct BottleDetectionView: View {
             VStack(spacing: 20) {
                 Spacer()
 
-                // Mensaje: Revisando si detecto una botella...
-                Text("Revisando si detecto una botella...")
+                // Mensajes de estado
+                Text("Revisando si detecto una cubeta...")
                     .font(.title2)
                     .foregroundColor(.white)
-                    .opacity(detectionStatus == .waitingForBottle ? 1 : 0)
+                    .opacity(detectionStatus == .waitingForBucket ? 1 : 0)
                     .animation(.easeInOut, value: detectionStatus)
 
-                // Mensaje: No logro detectar ninguna botella
-                Text("No logro detectar ninguna botella")
+                Text("No logro detectar ninguna cubeta")
                     .font(.title2)
                     .foregroundColor(.white)
-                    .opacity(detectionStatus == .bottleLost ? 1 : 0)
+                    .opacity(detectionStatus == .bucketLost ? 1 : 0)
                     .animation(.easeInOut, value: detectionStatus)
 
-                // Mensaje: Botella detectada
-                Text("Botella detectada")
+                Text("Cubeta detectada")
                     .font(.title2)
                     .foregroundColor(.white)
-                    .opacity(detectionStatus == .bottleDetected ? 1 : 0)
+                    .opacity(detectionStatus == .bucketDetected ? 1 : 0)
                     .animation(.easeInOut, value: detectionStatus)
 
-                // Mensaje: La botella está en buenas condiciones
-                Text("La botella está en buenas condiciones")
+                // Mensajes de condición
+                Text("La cubeta está en buenas condiciones")
                     .font(.title2)
                     .foregroundColor(.green)
                     .opacity(isCondition(.good) || hasDetectedGoodCondition ? 1 : 0)
                     .animation(.easeInOut, value: detectionStatus)
 
-                // Mensaje: La botella está en mal estado
-                Text("La botella está en mal estado")
+                Text("La cubeta está en mal estado")
                     .font(.title2)
                     .foregroundColor(.red)
                     .opacity(isCondition(.bad) ? 1 : 0)
                     .animation(.easeInOut, value: detectionStatus)
 
-                // Mensaje: No se pudo determinar el estado de la botella
-                Text("No se pudo determinar el estado de la botella")
+                Text("No se pudo determinar el estado de la cubeta")
                     .font(.title2)
                     .foregroundColor(.yellow)
                     .opacity(isCondition(.unknown) ? 1 : 0)
                     .animation(.easeInOut, value: detectionStatus)
 
-                // Mensaje: Error
+                // Mensaje de error
                 if let errorMessage = getErrorMessage() {
                     Text("Error: \(errorMessage)")
                         .font(.title2)
@@ -112,8 +109,8 @@ struct BottleDetectionView: View {
         }
     }
 
-    private func handleClassificationResult(_ detectionPhase: BottleDetectionPhase) {
-        // Si ya se detectó que la botella está en buen estado, no actualizar más el estado
+    private func handleClassificationResult(_ detectionPhase: BucketDetectionPhase) {
+        // Si ya se detectó que la cubeta está en buen estado, no actualizar más el estado
         if hasDetectedGoodCondition {
             return
         }
@@ -129,7 +126,7 @@ struct BottleDetectionView: View {
         }
     }
 
-    private func isCondition(_ condition: BottleCondition) -> Bool {
+    private func isCondition(_ condition: BucketCondition) -> Bool {
         if case .conditionChecked(let currentCondition) = detectionStatus {
             return currentCondition == condition
         }
@@ -144,15 +141,15 @@ struct BottleDetectionView: View {
     }
 }
 
-extension BottleDetectionPhase {
-    func toDetectionStatus() -> BottleDetectionView.DetectionStatus {
+extension BucketDetectionPhase {
+    func toDetectionStatus() -> BucketDetectionView.DetectionStatus {
         switch self {
-        case .checkingForBottle:
-            return .waitingForBottle
-        case .noBottleDetected:
-            return .bottleLost
-        case .bottleDetected:
-            return .bottleDetected
+        case .checkingForBucket:
+            return .waitingForBucket
+        case .noBucketDetected:
+            return .bucketLost
+        case .bucketDetected:
+            return .bucketDetected
         case .conditionChecked(let condition):
             return .conditionChecked(condition)
         case .error(let message):

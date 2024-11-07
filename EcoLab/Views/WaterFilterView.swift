@@ -8,62 +8,93 @@ struct WaterFilterView: View {
     @State private var showMaterialInfo = false
     @State private var showChecklist = false
     @State private var showBottleCheck = false
-    @State private var showBottleDetection = false
+    @State private var showBottleDetectionView = false
     @State private var showBucketCheck = false
+    @State private var showBucketDetectionView = false
+    @State private var showAR = false
 
     private let cameraViewController = CameraViewController()
 
     var body: some View {
         ZStack {
-            CameraView(cameraViewController: cameraViewController, onClassificationResult: { detectionPhase in
-                // Puedes manejar el resultado de la clasificación aquí si es necesario
-            })
+            // Cámara en el fondo
+            CameraView(
+                cameraViewController: cameraViewController,
+                onBottleClassificationResult: nil,
+                onBucketClassificationResult: nil
+            )
             .blur(radius: 5)
             .ignoresSafeArea()
 
             VStack {
                 if showIntro {
-                    IntroView {
+                    IntroView(onAdvance: {
                         showIntro = false
                         showMaterialInfo = true
-                    }
+                    })
                     .transition(.opacity)
                 } else if showMaterialInfo {
-                    MaterialInfoView {
+                    MaterialInfoView(onAdvance: {
                         showMaterialInfo = false
                         showChecklist = true
-                    }
+                    })
                     .transition(.opacity)
                 } else if showChecklist {
-                    ChecklistViewWrapper {
+                    ChecklistViewWrapper(onAllItemsChecked: {
                         showChecklist = false
                         showBottleCheck = true
-                    }
+                    })
                     .transition(.opacity)
                 } else if showBottleCheck {
-                    BottleCheckView {
+                    BottleCheckView(onAdvance: {
                         showBottleCheck = false
-                        showBottleDetection = true
-                    }
+                        showBottleDetectionView = true
+                    })
                     .transition(.opacity)
-                } else if showBottleDetection {
+                } else if showBottleDetectionView {
                     BottleDetectionView(
                         onAdvance: {
-                            showBottleDetection = false
+                            showBottleDetectionView = false
                             showBucketCheck = true
                         },
                         onBack: {
-                            showBottleDetection = false
+                            showBottleDetectionView = false
                             showBottleCheck = true
                         },
                         cameraViewController: cameraViewController
                     )
-                    .transition(.opacity)
-                } else if showBucketCheck {
-                    BucketCheckView {
-                        showBottleDetection = false
+                    .onAppear {
+                        cameraViewController.detectingBucket = false
                     }
                     .transition(.opacity)
+                } else if showBucketCheck {
+                    BucketCheckView(onAdvance: {
+                        showBucketCheck = false
+                        showBucketDetectionView = true
+                    })
+                    .transition(.opacity)
+                } else if showBucketDetectionView {
+                    BucketDetectionView(
+                        onAdvance: {
+                            showBucketDetectionView = false
+                            showAR = true
+                        },
+                        onBack: {
+                            showBucketDetectionView = false
+                            showBucketCheck = true
+                        },
+                        cameraViewController: cameraViewController
+                    )
+                    .onAppear {
+                        cameraViewController.detectingBucket = true
+                    }
+                    .onDisappear {
+                        cameraViewController.detectingBucket = false
+                    }
+                    .transition(.opacity)
+                } else if showAR {
+                    ARViewContainer()
+                        .ignoresSafeArea()
                 }
             }
         }
