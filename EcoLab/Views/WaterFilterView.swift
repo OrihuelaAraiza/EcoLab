@@ -11,19 +11,16 @@ struct WaterFilter: View {
     @State private var showCamera = false
     @State private var showAR = false
 
-    // Camera view controller que mantiene la sesión activa
     private let cameraViewController = CameraViewController()
 
     var body: some View {
         ZStack {
-            // Cámara en el fondo, siempre encendida
             CameraView(cameraViewController: cameraViewController, onClassificationResult: { detectionPhase in
                 // Puedes manejar el resultado de la clasificación aquí si es necesario
             })
             .blur(radius: 5)
             .ignoresSafeArea()
 
-            // Vistas de contenido superpuestas
             VStack {
                 if showIntro {
                     IntroView {
