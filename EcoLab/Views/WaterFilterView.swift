@@ -8,8 +8,8 @@ struct WaterFilterView: View {
     @State private var showMaterialInfo = false
     @State private var showChecklist = false
     @State private var showBottleCheck = false
-    @State private var showCamera = false
-    @State private var showAR = false
+    @State private var showBottleDetection = false
+    @State private var showBucketCheck = false
 
     private let cameraViewController = CameraViewController()
 
@@ -43,25 +43,27 @@ struct WaterFilterView: View {
                 } else if showBottleCheck {
                     BottleCheckView {
                         showBottleCheck = false
-                        showCamera = true
+                        showBottleDetection = true
                     }
                     .transition(.opacity)
-                } else if showCamera {
+                } else if showBottleDetection {
                     BottleDetectionView(
                         onAdvance: {
-                            showCamera = false
-                            showAR = true
+                            showBottleDetection = false
+                            showBucketCheck = true
                         },
                         onBack: {
-                            showCamera = false
+                            showBottleDetection = false
                             showBottleCheck = true
                         },
                         cameraViewController: cameraViewController
                     )
                     .transition(.opacity)
-                } else if showAR {
-                    ARViewContainer()
-                        .ignoresSafeArea()
+                } else if showBucketCheck {
+                    BucketCheckView {
+                        showBottleDetection = false
+                    }
+                    .transition(.opacity)
                 }
             }
         }
