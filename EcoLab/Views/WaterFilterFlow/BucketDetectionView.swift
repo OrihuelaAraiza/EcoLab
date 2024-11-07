@@ -107,6 +107,9 @@ struct BucketDetectionView: View {
         .onAppear {
             cameraViewController.startProcessingFrames()
         }
+        .onDisappear {
+            cameraViewController.stopProcessingFrames()
+        }
     }
 
     private func handleClassificationResult(_ detectionPhase: BucketDetectionPhase) {
