@@ -5,7 +5,7 @@ struct ProgressBar: View {
     let totalSteps: Int = 3
 
     var body: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: -8) {
             ForEach(0..<totalSteps) { index in
                 HStack(spacing: 0) {
                     Circle()
@@ -20,5 +20,6 @@ struct ProgressBar: View {
                 }
             }
         }
+        .padding(.horizontal, 16)
     }
 }
