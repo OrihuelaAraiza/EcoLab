@@ -40,8 +40,13 @@ struct WaterFilterView: View {
             .ignoresSafeArea()
 
             VStack {
-                ProgressBar(currentStep: currentStep.progressStep)
-                    .padding(.top, 20)
+                // Conditionally show the ProgressBar except in the `buildingFilter` step
+                if currentStep != .buildingFilter {
+                    ProgressBar(currentStep: currentStep.progressStep)
+                        .padding(.top, 20)
+                }
+                
+                Spacer() // Add a spacer to push content below if necessary
                 
                 switch currentStep {
                 case .intro:
@@ -156,20 +161,29 @@ struct WaterFilterView: View {
                         }
                         .transition(.opacity)
                     }
+                    
                 case .buildingFilter:
                     BuildingFilter01(
                         onAdvance: {
-                            currentStep = .finish
+                            withAnimation {
+                                currentStep = .finish
+                            }
                         },
                         onBack: {
-                            currentStep = .bucketCheck
+                            withAnimation {
+                                currentStep = .bucketCheck
+                            }
                         }
                     )
                     .transition(.opacity)
+                    .ignoresSafeArea() // Make it full screen
+
                 case .finish:
                     // Replace EmptyView with your final view and handle `onBack` accordingly
                     EmptyView()
                 }
+                
+                Spacer() // Add a spacer for spacing in other steps
             }
         }
     }
