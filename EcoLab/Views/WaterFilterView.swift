@@ -16,14 +16,14 @@ struct WaterFilterView: View {
         case bottleDetection
         case bucketCheck
         case bucketDetection
-        case ar
+        case buildingFilter
         case finish
         
         var progressStep: Int {
             switch self {
             case .intro, .materialInfo: return 0
             case .bottleCheck, .bottleDetection, .bucketCheck, .bucketDetection: return 1
-            case .ar: return 2
+            case .buildingFilter: return 2
             case .finish: return 3
             }
         }
@@ -126,7 +126,7 @@ struct WaterFilterView: View {
                     if appSettings.isDeveloperMode {
                         DeveloperPassView(onAdvance: {
                             withAnimation {
-                                currentStep = .ar
+                                currentStep = .buildingFilter
                             }
                         }, onBack:{
                             withAnimation{
@@ -138,7 +138,7 @@ struct WaterFilterView: View {
                         BucketDetectionView(
                             onAdvance: {
                                 withAnimation {
-                                    currentStep = .ar
+                                    currentStep = .buildingFilter
                                 }
                             },
                             onBack: {
@@ -156,9 +156,16 @@ struct WaterFilterView: View {
                         }
                         .transition(.opacity)
                     }
-                case .ar:
-                    // Replace EmptyView with your AR view and handle `onBack` accordingly
-                    EmptyView()
+                case .buildingFilter:
+                    BuildingFilter01(
+                        onAdvance: {
+                            currentStep = .finish
+                        },
+                        onBack: {
+                            currentStep = .bucketCheck
+                        }
+                    )
+                    .transition(.opacity)
                 case .finish:
                     // Replace EmptyView with your final view and handle `onBack` accordingly
                     EmptyView()
