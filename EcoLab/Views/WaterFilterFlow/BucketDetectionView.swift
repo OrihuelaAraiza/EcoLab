@@ -83,6 +83,7 @@ struct BucketDetectionView: View {
                     Button("Retroceder") {
                         onBack()
                     }
+                    .bold()
                     .padding()
                     .background(Color.black)
                     .foregroundColor(.white)
@@ -94,6 +95,7 @@ struct BucketDetectionView: View {
                         Button("Avanzar") {
                             onAdvance()
                         }
+                        .bold()
                         .padding()
                         .background(Color.black)
                         .foregroundColor(.white)

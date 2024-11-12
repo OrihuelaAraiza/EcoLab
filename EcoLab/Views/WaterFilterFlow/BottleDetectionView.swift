@@ -86,6 +86,7 @@ struct BottleDetectionView: View {
                     Button("Regresar") {
                         onBack()
                     }
+                    .bold()
                     .padding()
                     .background(Color.black)
                     .foregroundColor(.white)
@@ -97,6 +98,7 @@ struct BottleDetectionView: View {
                         Button("Avanzar") {
                             onAdvance()
                         }
+                        .bold()
                         .padding()
                         .background(Color.black)
                         .foregroundColor(.white)

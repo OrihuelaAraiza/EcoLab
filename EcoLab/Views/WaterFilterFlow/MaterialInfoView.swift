@@ -36,6 +36,7 @@ struct MaterialInfoView: View {
                     Button("Regresar") {
                         onBack()
                     }
+                    .bold()
                     .padding()
                     .background(Color.black)
                     .foregroundColor(.white)
@@ -44,6 +45,7 @@ struct MaterialInfoView: View {
                     Button("Avanzar") {
                         onAdvance()
                     }
+                    .bold()
                     .padding()
                     .background(Color.black)
                     .foregroundColor(.white)

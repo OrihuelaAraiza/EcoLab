@@ -19,6 +19,7 @@ struct BottleCheckView: View {
                 Button("Regresar") {
                     onBack()
                 }
+                .bold()
                 .padding()
                 .background(Color.black)
                 .foregroundColor(.white)
@@ -27,6 +28,7 @@ struct BottleCheckView: View {
                 Button("Avanzar") {
                     onAdvance()
                 }
+                .bold()
                 .padding()
                 .background(Color.black)
                 .foregroundColor(.white)

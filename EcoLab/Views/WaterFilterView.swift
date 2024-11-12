@@ -48,6 +48,10 @@ struct WaterFilterView: View {
                     withAnimation{
                         currentStep = .bottleCheck
                     }
+                }, onAdvance: {
+                    withAnimation{
+                        currentStep = .finish
+                    }
                 })
                 .ignoresSafeArea()
                 .background(Color.clear)
@@ -177,7 +181,16 @@ struct WaterFilterView: View {
                         }
 
                     case .finish:
-                        EmptyView()
+                        FinishView(onAdvance:
+                                    {
+                            withAnimation{
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }, onBack: {
+                            withAnimation{
+                                currentStep = .buildingFilter
+                            }
+                        })
                     default:
                         EmptyView()
                     }

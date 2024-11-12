@@ -1,20 +1,21 @@
 import SwiftUI
 
-struct DeveloperPassView: View {
+struct FinishView: View {
     var onAdvance: () -> Void
-    var onBack: () -> Void
+    var onBack: () -> Void // New back action
 
     var body: some View {
         VStack {
             Spacer()
-            Text("Developer Mode, have fun debbuging")
-                .font(.headline)
+            
+            Text("¡Ahora puedes filtrar agua!")
+                .font(.largeTitle)
+                .bold()
                 .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .padding()
-
+                .padding(.bottom, 8)
+            
             Spacer()
-
+            
             HStack {
                 Button("Regresar") {
                     onBack()
@@ -25,7 +26,7 @@ struct DeveloperPassView: View {
                 .foregroundColor(.white)
                 .clipShape(Capsule())
 
-                Button("Avanzar") {
+                Button("Volver al menú") {
                     onAdvance()
                 }
                 .bold()
@@ -34,10 +35,9 @@ struct DeveloperPassView: View {
                 .foregroundColor(.white)
                 .clipShape(Capsule())
             }
+            Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .cornerRadius(12)
-        .padding()
-    
     }
 }

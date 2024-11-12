@@ -45,10 +45,9 @@ struct BuildingFilterView: UIViewRepresentable {
     }
 }
 
-// SwiftUI wrapper para la vista de AR y controles adicionales
 struct BuildingFilter: View {
     var onBack: () -> Void
-    @State private var isAnimating = false // Estado para el botón "Ver cómo se hace" / "Detener"
+    var onAdvance: () -> Void
     
     var body: some View {
         ZStack {
@@ -56,26 +55,56 @@ struct BuildingFilter: View {
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
-                // Botón de "Regresar" en la esquina superior izquierda
                 HStack {
                     Button(action: onBack) {
                         Text("Regresar")
+                            .bold()
                             .padding()
-                            .background(Color.white.opacity(0.8))
-                            .foregroundColor(.black)
+                            .background(Color.black.opacity(0.8))
+                            .foregroundColor(.white)
                             .cornerRadius(10)
                     }
                     .padding(.leading, 20)
+                    
                     Spacer()
+                    
+                    Button(action: onAdvance) {
+                        Text("Avanzar")
+                            .bold()
+                            .padding()
+                            .background(Color.black.opacity(0.8))
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.trailing, 20)
                 }
+                .padding(.top, 20)
                 
                 Spacer()
-                
+
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.black.opacity(0.6))
+                        .frame(width: 400, height: 120)
+                        .shadow(radius: 10)
+                    
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("1. Toca la flecha verde para empezar")
+                        Text("2. Coloca la cubeta en algún lugar plano")
+                        Text("3. Coloca el trapo encima de la cubeta")
+                        Text("4. Utiliza la botella o botellas para guiar el agua a la cubeta")
+                        Text("5. ¡Listo!")
+                    }
+                    .padding()
+                    .foregroundColor(.white)
+                    .font(.system(size: 8))
+                    .bold()
+                    .multilineTextAlignment(.leading)
+                    .frame(width: 400, height: 120)
+                }
+                .padding(.bottom, 30)
             }
-            .padding()
+            .edgesIgnoringSafeArea(.all)
         }
-        .edgesIgnoringSafeArea(.all)
-        .background(.clear)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

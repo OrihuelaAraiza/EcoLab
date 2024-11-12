@@ -10,6 +10,7 @@ struct IntroView: View {
             
             Text("Filtro de agua")
                 .font(.largeTitle)
+                .bold()
                 .foregroundColor(.white)
                 .padding(.bottom, 8)
             
@@ -23,6 +24,7 @@ struct IntroView: View {
                 Button("Regresar") { 
                     onBack()
                 }
+                .bold()
                 .padding()
                 .background(Color.black)
                 .foregroundColor(.white)
@@ -31,6 +33,7 @@ struct IntroView: View {
                 Button("Avanzar") {
                     onAdvance()
                 }
+                .bold()
                 .padding()
                 .background(Color.black)
                 .foregroundColor(.white)
