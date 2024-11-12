@@ -163,7 +163,11 @@ struct WaterFilterView: View {
                     }
                     
                 case .buildingFilter:
-                    EmptyView()
+                    BuildingFilter(onBack: {
+                        withAnimation{
+                            currentStep = .bottleCheck
+                        }
+                    })
                 case .finish:
                     // Replace EmptyView with your final view and handle `onBack` accordingly
                     EmptyView()

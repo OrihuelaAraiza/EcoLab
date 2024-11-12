@@ -57,7 +57,7 @@ struct BuildingFilterView: UIViewRepresentable {
 }
 
 // SwiftUI wrapper para la vista de AR y controles adicionales
-struct BuildingFilterTest: View {
+struct BuildingFilter: View {
     var onBack: () -> Void
     @State private var isAnimating = false // Estado para el botón "Ver cómo se hace" / "Detener"
     

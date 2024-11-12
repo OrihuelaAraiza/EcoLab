@@ -2,11 +2,6 @@ import SwiftUI
 
 struct ContentView: View {
     
-    var body: some View{
-        BuildingFilterTest(onBack: {print("Hola")})
-    }
-    
-    /*
     private let cameraViewController = CameraViewController() // Instancia compartida
     @State private var currentMenu: Menu = .main // Estado para el menú actual
 
@@ -55,5 +50,5 @@ struct ContentView: View {
         }
         .animation(.easeInOut(duration: 0.7), value: currentMenu)
     }
-     */
+     
 }
