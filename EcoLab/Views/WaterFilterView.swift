@@ -31,150 +31,161 @@ struct WaterFilterView: View {
 
     var body: some View {
         ZStack {
-            CameraView(
-                cameraViewController: cameraViewController,
-                onBottleClassificationResult: nil,
-                onBucketClassificationResult: nil
-            )
-            .blur(radius: 5)
-            .ignoresSafeArea()
+            // Mostrar CameraView solo si no estamos en el paso buildingFilter
+            if currentStep != .buildingFilter {
+                CameraView(
+                    cameraViewController: cameraViewController,
+                    onBottleClassificationResult: nil,
+                    onBucketClassificationResult: nil
+                )
+                .blur(radius: 5)
+                .ignoresSafeArea()
+            }
 
-            VStack {
-                // Conditionally show the ProgressBar except in the `buildingFilter` step
-                if currentStep != .buildingFilter {
+            // Mostrar BuildingFilter solo en el paso buildingFilter
+            if currentStep == .buildingFilter {
+                BuildingFilter(onBack: {
+                    withAnimation{
+                        currentStep = .bottleCheck
+                    }
+                })
+                .ignoresSafeArea()
+                .background(Color.clear)
+                .transition(.opacity)
+            }
+
+            // Mostrar el VStack solo si no estamos en el paso buildingFilter
+            if currentStep != .buildingFilter {
+                VStack {
                     ProgressBar(currentStep: currentStep.progressStep)
                         .padding(.top, 20)
-                }
-                
-                Spacer() // Add a spacer to push content below if necessary
-                
-                switch currentStep {
-                case .intro:
-                    IntroView(onAdvance: {
-                        withAnimation {
-                            currentStep = .materialInfo
-                        }
-                    }, onBack: {
-                        presentationMode.wrappedValue.dismiss() // Return to ProyectsMenuView
-                    })
-                    .transition(.opacity)
-
-                case .materialInfo:
-                    MaterialInfoView(onAdvance: {
-                        withAnimation {
-                            currentStep = .bottleCheck
-                        }
-                    }, onBack: {
-                        withAnimation {
-                            currentStep = .intro
-                        }
-                    })
-                    .transition(.opacity)
-
-                case .bottleCheck:
-                    BottleCheckView(onAdvance: {
-                        withAnimation {
-                            currentStep = .bottleDetection
-                        }
-                    }, onBack: {
-                        withAnimation {
-                            currentStep = .materialInfo
-                        }
-                    })
-                    .transition(.opacity)
-
-                case .bottleDetection:
-                    if appSettings.isDeveloperMode {
-                        DeveloperPassView(onAdvance: {
+                    
+                    Spacer()
+                    
+                    switch currentStep {
+                    case .intro:
+                        IntroView(onAdvance: {
                             withAnimation {
-                                currentStep = .bucketCheck
+                                currentStep = .materialInfo
                             }
-                        }, onBack:{
-                            withAnimation{
+                        }, onBack: {
+                            presentationMode.wrappedValue.dismiss() // Return to ProyectsMenuView
+                        })
+                        .transition(.opacity)
+
+                    case .materialInfo:
+                        MaterialInfoView(onAdvance: {
+                            withAnimation {
                                 currentStep = .bottleCheck
+                            }
+                        }, onBack: {
+                            withAnimation {
+                                currentStep = .intro
                             }
                         })
                         .transition(.opacity)
-                    } else {
-                        BottleDetectionView(
-                            onAdvance: {
+
+                    case .bottleCheck:
+                        BottleCheckView(onAdvance: {
+                            withAnimation {
+                                currentStep = .bottleDetection
+                            }
+                        }, onBack: {
+                            withAnimation {
+                                currentStep = .materialInfo
+                            }
+                        })
+                        .transition(.opacity)
+
+                    case .bottleDetection:
+                        if appSettings.isDeveloperMode {
+                            DeveloperPassView(onAdvance: {
                                 withAnimation {
                                     currentStep = .bucketCheck
                                 }
-                            },
-                            onBack: {
-                                withAnimation {
+                            }, onBack:{
+                                withAnimation{
                                     currentStep = .bottleCheck
                                 }
-                            },
-                            cameraViewController: cameraViewController
-                        )
-                        .onAppear {
-                            cameraViewController.detectingBucket = false
-                        }
-                        .transition(.opacity)
-                    }
-
-                case .bucketCheck:
-                    BucketCheckView(onAdvance: {
-                        withAnimation {
-                            currentStep = .bucketDetection
-                        }
-                    }, onBack: {
-                        withAnimation {
-                            currentStep = .bottleDetection
-                        }
-                    })
-                    .transition(.opacity)
-
-                case .bucketDetection:
-                    if appSettings.isDeveloperMode {
-                        DeveloperPassView(onAdvance: {
-                            withAnimation {
-                                currentStep = .buildingFilter
+                            })
+                            .transition(.opacity)
+                        } else {
+                            BottleDetectionView(
+                                onAdvance: {
+                                    withAnimation {
+                                        currentStep = .bucketCheck
+                                    }
+                                },
+                                onBack: {
+                                    withAnimation {
+                                        currentStep = .bottleCheck
+                                    }
+                                },
+                                cameraViewController: cameraViewController
+                            )
+                            .onAppear {
+                                cameraViewController.detectingBucket = false
                             }
-                        }, onBack:{
-                            withAnimation{
-                                currentStep = .bucketCheck
+                            .transition(.opacity)
+                        }
+
+                    case .bucketCheck:
+                        BucketCheckView(onAdvance: {
+                            withAnimation {
+                                currentStep = .bucketDetection
+                            }
+                        }, onBack: {
+                            withAnimation {
+                                currentStep = .bottleDetection
                             }
                         })
                         .transition(.opacity)
-                    } else {
-                        BucketDetectionView(
-                            onAdvance: {
+
+                    case .bucketDetection:
+                        if appSettings.isDeveloperMode {
+                            DeveloperPassView(onAdvance: {
                                 withAnimation {
                                     currentStep = .buildingFilter
                                 }
-                            },
-                            onBack: {
-                                withAnimation {
+                            }, onBack:{
+                                withAnimation{
                                     currentStep = .bucketCheck
                                 }
-                            },
-                            cameraViewController: cameraViewController
-                        )
-                        .onAppear {
-                            cameraViewController.detectingBucket = true
+                            })
+                            .transition(.opacity)
+                        } else {
+                            BucketDetectionView(
+                                onAdvance: {
+                                    withAnimation {
+                                        currentStep = .buildingFilter
+                                    }
+                                },
+                                onBack: {
+                                    withAnimation {
+                                        currentStep = .bucketCheck
+                                    }
+                                },
+                                cameraViewController: cameraViewController
+                            )
+                            .onAppear {
+                                cameraViewController.detectingBucket = true
+                            }
+                            .onDisappear {
+                                cameraViewController.detectingBucket = false
+                            }
+                            .transition(.opacity)
                         }
-                        .onDisappear {
-                            cameraViewController.detectingBucket = false
-                        }
-                        .transition(.opacity)
+
+                    case .finish:
+                        EmptyView()
+                    default:
+                        EmptyView()
                     }
                     
-                case .buildingFilter:
-                    BuildingFilter(onBack: {
-                        withAnimation{
-                            currentStep = .bottleCheck
-                        }
-                    })
-                case .finish:
-                    // Replace EmptyView with your final view and handle `onBack` accordingly
-                    EmptyView()
+                    Spacer()
                 }
-                
-                Spacer() // Add a spacer for spacing in other steps
             }
         }
+        .ignoresSafeArea()
     }
 }

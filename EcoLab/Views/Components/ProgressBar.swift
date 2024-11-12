@@ -21,5 +21,6 @@ struct ProgressBar: View {
             }
         }
         .padding(.horizontal, 16)
+        .background(Color.clear)
     }
 }

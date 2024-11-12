@@ -42,17 +42,6 @@ struct BuildingFilterView: UIViewRepresentable {
             }
         }
         
-        func playAnimation() {
-            // Reproducir la animación desde el inicio
-            bucketEntity?.playAnimation(named: "animationName", // Cambia "animationName" al nombre exacto de la animación
-                                        transitionDuration: 0.3,
-                                        startsPaused: false)
-        }
-        
-        func pauseAnimation() {
-            // Pausar la animación
-            bucketEntity?.stopAllAnimations()
-        }
     }
 }
 
@@ -82,28 +71,11 @@ struct BuildingFilter: View {
                 
                 Spacer()
                 
-                // Botones de control de animación en el centro
-                HStack {
-                    Button(action: {
-                        if isAnimating {
-                            // Detener la animación
-                            BuildingFilterView.Coordinator().pauseAnimation()
-                        } else {
-                            // Iniciar la animación
-                            BuildingFilterView.Coordinator().playAnimation()
-                        }
-                        isAnimating.toggle() // Cambiar el estado
-                    }) {
-                        Text(isAnimating ? "Detener" : "Ver cómo se hace")
-                            .padding()
-                            .background(Color.white.opacity(0.8))
-                            .foregroundColor(.black)
-                            .cornerRadius(10)
-                    }
-                }
-                .padding(.bottom, 30)
             }
             .padding()
         }
+        .edgesIgnoringSafeArea(.all)
+        .background(.clear)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
