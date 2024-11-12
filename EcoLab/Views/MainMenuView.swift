@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct MainMenuView: View {
-    @Binding var showProyectsMenu: Bool
+    let onProjectsTap: () -> Void
+    let onLearnTap: () -> Void
     @EnvironmentObject var appSettings: AppSettings
     var cornerRadius: CGFloat = 20
 
@@ -28,19 +29,19 @@ struct MainMenuView: View {
                     HStack(spacing: 20) {
                         Button(action: {
                             withAnimation{
-                                showProyectsMenu = true
+                                onProjectsTap()
                             }
                         }) {
-                            ButtonContent(imageName: "ProjectsIcon", title: "Proyectos", subtitle: "Convierte materiales en ideas increíbles")
+                            ButtonContent(imageName: "ProjectsIcon", title: "Proyectos", subtitle: "Convierte materiales en ideas increíbles", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 140, height: 120)
                         .background(Color.white)
                         .cornerRadius(cornerRadius)
 
                         Button(action: {
-                            // Acción para el botón "Aprende"
+                            onLearnTap()
                         }) {
-                            ButtonContent(imageName: "LearningIcon", title: "Aprende", subtitle: "Para cuidar a tu comunidad y al planeta")
+                            ButtonContent(imageName: "LearningIcon", title: "Aprende", subtitle: "Para cuidar a tu comunidad y al planeta", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 140, height: 120)
                         .background(Color.white)
@@ -51,7 +52,7 @@ struct MainMenuView: View {
                         Button(action: {
                             // Acción para el botón "Próximamente"
                         }) {
-                            ButtonContent(imageName: "SoonIcon", title: "Próximamente", subtitle: "Proximamente")
+                            ButtonContent(imageName: "SoonIcon", title: "Próximamente", subtitle: "Proximamente", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 140, height: 120)
                         .background(Color.white)
@@ -60,7 +61,7 @@ struct MainMenuView: View {
                         Button(action: {
                             // Acción para el botón "Info"
                         }) {
-                            ButtonContent(imageName: "InfoIcon", title: "Info", subtitle: "Acerca de EcoLab")
+                            ButtonContent(imageName: "InfoIcon", title: "Info", subtitle: "Acerca de EcoLab", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 140, height: 120)
                         .background(Color.white)

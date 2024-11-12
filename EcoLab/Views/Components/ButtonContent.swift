@@ -3,6 +3,8 @@ struct ButtonContent: View {
     let imageName: String
     let title: String
     let subtitle: String
+    let titleColor: Color
+    let subtitleColor: Color
 
     var body: some View {
         GeometryReader { geometry in
@@ -18,7 +20,7 @@ struct ButtonContent: View {
                 .frame(height: geometry.size.height / 2)
 
                 Text(title)
-                    .foregroundColor(.black)
+                    .foregroundColor(titleColor)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, maxHeight: geometry.size.height / 2, alignment: .leading)
@@ -27,7 +29,7 @@ struct ButtonContent: View {
                 
                 Text(subtitle)
                     .font(.system(size: 8))
-                    .foregroundColor(.gray)
+                    .foregroundColor(subtitleColor)
                     .fontWeight(.light)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, maxHeight: geometry.size.height / 2, alignment: .leading)

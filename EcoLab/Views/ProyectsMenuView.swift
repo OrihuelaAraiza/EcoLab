@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProyectsMenuView: View {
-    @Binding var showProyectsMenu: Bool
+    let onBack: () -> Void
     @State private var showWaterFilter = false
     var cornerRadius: CGFloat = 20
 
@@ -19,7 +19,7 @@ struct ProyectsMenuView: View {
                             // Acción para "Filtro de agua"
                             showWaterFilter = true
                         }) {
-                            ButtonContent(imageName: "WaterIcon", title: "Filtro de agua", subtitle: "Un filtro de agua para el uso diario")
+                            ButtonContent(imageName: "WaterIcon", title: "Filtro de agua", subtitle: "Un filtro de agua para el uso diario", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
@@ -28,7 +28,7 @@ struct ProyectsMenuView: View {
                         Button(action: {
                             // Acción para "Coming Soon"
                         }) {
-                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon")
+                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
@@ -38,7 +38,7 @@ struct ProyectsMenuView: View {
                         Button(action: {
 
                         }) {
-                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon")
+                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
@@ -47,7 +47,7 @@ struct ProyectsMenuView: View {
                         Button(action: {
 
                         }) {
-                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon")
+                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon", titleColor: .black, subtitleColor: .gray)
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
@@ -56,7 +56,7 @@ struct ProyectsMenuView: View {
 
                     Button(action: {
                         withAnimation {
-                            showProyectsMenu = false
+                            onBack()
                         }
                     }) {
                         Text("Regresar")

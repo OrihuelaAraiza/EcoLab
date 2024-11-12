@@ -1,28 +1,52 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showProyectsMenu = false
     private let cameraViewController = CameraViewController() // Instancia compartida
+    @State private var currentMenu: Menu = .main // Estado para el menú actual
+
+    enum Menu {
+        case main
+        case projects
+        case learn
+    }
 
     var body: some View {
         ZStack {
-            CameraView(cameraViewController: cameraViewController, onBottleClassificationResult: { detectionPhase in
-                // Manejo de resultados de clasificación si es necesario
-            }, onBucketClassificationResult: nil)
-            .blur(radius: 5)
-            .ignoresSafeArea()
-
-            Color.black.opacity(0.7)
+            // Mostrar CameraView solo si no estamos en el menú de aprendizaje
+            if currentMenu != .learn {
+                CameraView(
+                    cameraViewController: cameraViewController,
+                    onBottleClassificationResult: nil,
+                    onBucketClassificationResult: nil
+                )
+                .blur(radius: 5)
                 .ignoresSafeArea()
+                Color.black.opacity(0.7)
+                    .ignoresSafeArea()
+            }
+            else{
+                Color.white
+                    .ignoresSafeArea()
+            }
 
-            if showProyectsMenu {
-                ProyectsMenuView(showProyectsMenu: $showProyectsMenu)
+            switch currentMenu {
+            case .main:
+                MainMenuView(
+                    onProjectsTap: { currentMenu = .projects },
+                    onLearnTap: { currentMenu = .learn }
+                )
+                .transition(.opacity)
+                
+            case .projects:
+                ProyectsMenuView(onBack: { currentMenu = .main })
                     .transition(.opacity)
-            } else {
-                MainMenuView(showProyectsMenu: $showProyectsMenu)
+                
+            case .learn:
+                LearnView(onBack: { currentMenu = .main })
                     .transition(.opacity)
+                    .ignoresSafeArea(.all)
             }
         }
-        .animation(.easeInOut(duration: 0.7), value: showProyectsMenu)
+        .animation(.easeInOut(duration: 0.7), value: currentMenu)
     }
 }
