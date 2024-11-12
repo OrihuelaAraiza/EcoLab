@@ -7,6 +7,7 @@ struct MaterialInfoView: View {
     @State private var cloth: SCNScene? = nil
     @State private var isLoaded = false
     var onAdvance: () -> Void
+    var onBack: () -> Void
 
     var body: some View {
         VStack {
@@ -31,13 +32,23 @@ struct MaterialInfoView: View {
 
                 Spacer()
 
-                Button("Avanzar") {
-                    onAdvance()
+                HStack {
+                    Button("Regresar") {
+                        onBack()
+                    }
+                    .padding()
+                    .background(Color.black)
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
+
+                    Button("Avanzar") {
+                        onAdvance()
+                    }
+                    .padding()
+                    .background(Color.black)
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
                 }
-                .padding()
-                .background(Color.black)
-                .foregroundColor(.white)
-                .clipShape(Capsule())
                 
                 Spacer()
             } else {

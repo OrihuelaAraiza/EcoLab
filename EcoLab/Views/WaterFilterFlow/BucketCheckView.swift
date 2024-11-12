@@ -2,6 +2,7 @@ import SwiftUI
 
 struct BucketCheckView: View {
     var onAdvance: () -> Void
+    var onBack: () -> Void
 
     var body: some View {
         VStack {
@@ -14,13 +15,23 @@ struct BucketCheckView: View {
 
             Spacer()
 
-            Button("Avanzar") {
-                onAdvance()
+            HStack {
+                Button("Regresar") {
+                    onBack()
+                }
+                .padding()
+                .background(Color.black)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+
+                Button("Avanzar") {
+                    onAdvance()
+                }
+                .padding()
+                .background(Color.black)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
             }
-            .padding()
-            .background(Color.black)
-            .foregroundColor(.white)
-            .clipShape(Capsule())
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .cornerRadius(12)

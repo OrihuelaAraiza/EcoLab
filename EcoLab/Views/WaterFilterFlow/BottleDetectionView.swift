@@ -83,7 +83,7 @@ struct BottleDetectionView: View {
                 Spacer()
 
                 HStack {
-                    Button("Retroceder") {
+                    Button("Regresar") {
                         onBack()
                     }
                     .padding()

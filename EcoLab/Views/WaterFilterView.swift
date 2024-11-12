@@ -50,8 +50,7 @@ struct WaterFilterView: View {
                             currentStep = .materialInfo
                         }
                     }, onBack: {
-                        // Dismiss the WaterFilterView to return to ProyectsMenuView
-                        presentationMode.wrappedValue.dismiss()
+                        presentationMode.wrappedValue.dismiss() // Return to ProyectsMenuView
                     })
                     .transition(.opacity)
 
@@ -59,6 +58,10 @@ struct WaterFilterView: View {
                     MaterialInfoView(onAdvance: {
                         withAnimation {
                             currentStep = .bottleCheck
+                        }
+                    }, onBack: {
+                        withAnimation {
+                            currentStep = .intro
                         }
                     })
                     .transition(.opacity)
@@ -68,6 +71,10 @@ struct WaterFilterView: View {
                         withAnimation {
                             currentStep = .bottleDetection
                         }
+                    }, onBack: {
+                        withAnimation {
+                            currentStep = .materialInfo
+                        }
                     })
                     .transition(.opacity)
 
@@ -76,6 +83,10 @@ struct WaterFilterView: View {
                         DeveloperPassView(onAdvance: {
                             withAnimation {
                                 currentStep = .bucketCheck
+                            }
+                        }, onBack:{
+                            withAnimation{
+                                currentStep = .bottleCheck
                             }
                         })
                         .transition(.opacity)
@@ -104,6 +115,10 @@ struct WaterFilterView: View {
                         withAnimation {
                             currentStep = .bucketDetection
                         }
+                    }, onBack: {
+                        withAnimation {
+                            currentStep = .bottleDetection
+                        }
                     })
                     .transition(.opacity)
 
@@ -112,6 +127,10 @@ struct WaterFilterView: View {
                         DeveloperPassView(onAdvance: {
                             withAnimation {
                                 currentStep = .ar
+                            }
+                        }, onBack:{
+                            withAnimation{
+                                currentStep = .bucketCheck
                             }
                         })
                         .transition(.opacity)
@@ -138,8 +157,10 @@ struct WaterFilterView: View {
                         .transition(.opacity)
                     }
                 case .ar:
+                    // Replace EmptyView with your AR view and handle `onBack` accordingly
                     EmptyView()
                 case .finish:
+                    // Replace EmptyView with your final view and handle `onBack` accordingly
                     EmptyView()
                 }
             }
