@@ -118,7 +118,7 @@ struct BuildingFilter01View: UIViewRepresentable {
             }
 
             // Adjust the scale of the cloth
-            clothEntity.scale = SIMD3<Float>(0.02, 0.02, 0.02) // Adjusted scale to match the bucket's size
+            clothEntity.scale = SIMD3<Float>(0.002, 0.002, 0.002) // Adjusted scale to match the bucket's size
 
             // Position the cloth above the bucket
             let startPosition = SIMD3<Float>(0, 0.5, 0) // Start 0.5 meters above the bucket
@@ -151,7 +151,7 @@ struct BuildingFilter01View: UIViewRepresentable {
             }
 
             // Adjust the scale of the bottle
-            bottleEntity.scale = SIMD3<Float>(0.02, 0.02, 0.02) // Adjusted scale to match the other models
+            bottleEntity.scale = SIMD3<Float>(0.005, 0.005, 0.005) // Adjusted scale to match the other models
 
             // Position the bottle some distance away from the bucket
             let startPosition = SIMD3<Float>(0, 0.2, -0.5) // Start 0.5 meters in front of the bucket
@@ -208,5 +208,6 @@ struct BuildingFilter01: View {
             BuildingFilter01View(coachingCompleted: $coachingCompleted)
                 .edgesIgnoringSafeArea(.all)
         }
+        .background(Color.black.opacity(0.5))
     }
 }
