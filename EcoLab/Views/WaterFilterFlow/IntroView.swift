@@ -1,9 +1,6 @@
 import SwiftUI
-import SceneKit
 
 struct IntroView: View {
-    @State var bottle: SCNScene? = .init(named: "PlasticBottle.scn")
-    @State var bucket: SCNScene? = .init(named: "Bucket.scn")
     var onAdvance: () -> Void
     
     var body: some View {
@@ -21,13 +18,6 @@ struct IntroView: View {
             
             Spacer()
             
-            HStack {
-                Model3DView(scene: $bottle)
-                    .frame(height: 150)
-                Model3DView(scene: $bucket)
-                    .frame(height: 150)
-            }
-            
             Spacer()
             
             Button("Avanzar") {
@@ -39,9 +29,10 @@ struct IntroView: View {
             .clipShape(Capsule())
             
             Spacer()
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .cornerRadius(12)
     }
+    
 }
-

@@ -4,6 +4,7 @@ import SceneKit
 struct Model3DView: UIViewRepresentable {
     
     @Binding var scene: SCNScene?
+    var scaleFactor: Float // Add a scale factor parameter
 
     func makeCoordinator() -> Coordinator {
         Coordinator(scene: scene)
@@ -16,6 +17,9 @@ struct Model3DView: UIViewRepresentable {
         view.antialiasingMode = .multisampling2X
         view.scene = scene
         view.backgroundColor = .clear
+        
+        // Apply the scale factor to the scene's root node
+        scene?.rootNode.scale = SCNVector3(scaleFactor, scaleFactor, scaleFactor)
         
         // Start the continuous rotation
         context.coordinator.startContinuousRotation()
@@ -34,22 +38,18 @@ struct Model3DView: UIViewRepresentable {
         }
         
         func startContinuousRotation() {
-            // Invalidate any existing timer before starting a new one
             rotationTimer?.invalidate()
             
-            // Set up a timer to rotate the model continuously
             rotationTimer = Timer.scheduledTimer(withTimeInterval: 0.016, repeats: true) { [weak self] _ in
                 self?.rotationIdle()
             }
         }
         
         private func rotationIdle() {
-            // Increment the rotation on the Y-axis
-            scene?.rootNode.eulerAngles.y += 0.01
+            scene?.rootNode.childNode(withName: "Root", recursively: true)?.eulerAngles.y += 0.01
         }
         
         deinit {
-            // Clean up the timer if the Coordinator is deinitialized
             rotationTimer?.invalidate()
         }
     }
