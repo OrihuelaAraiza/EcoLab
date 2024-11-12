@@ -9,6 +9,7 @@ struct ContentView: View {
         case main
         case projects
         case learn
+        case about
     }
 
     var body: some View {
@@ -34,7 +35,8 @@ struct ContentView: View {
             case .main:
                 MainMenuView(
                     onProjectsTap: { currentMenu = .projects },
-                    onLearnTap: { currentMenu = .learn }
+                    onLearnTap: { currentMenu = .learn },
+                    onAboutTap: { currentMenu = .about }
                 )
                 .transition(.opacity)
                 
@@ -44,6 +46,10 @@ struct ContentView: View {
                 
             case .learn:
                 LearnView(onBack: { currentMenu = .main })
+                    .transition(.opacity)
+                    .ignoresSafeArea(.all)
+            case .about:
+                AboutView(onBack: { currentMenu = .main })
                     .transition(.opacity)
                     .ignoresSafeArea(.all)
             }

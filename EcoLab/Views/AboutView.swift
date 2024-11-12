@@ -1,36 +1,32 @@
 import SwiftUI
 
 struct AboutView: View {
-    var onBack: () -> Void // Cierre para dismiss
+    var onBack: () -> Void
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // Encabezado con imagen y textos
                 ZStack {
-                    Image("aboutBG") // Asegúrate de tener una imagen llamada "aboutBG" en tus assets
+                    Image("aboutBG")
                         .resizable()
-                        .scaledToFill()
                         .frame(width: .infinity, height: 400)
-                        .clipped()
                         .opacity(0.5)
                     
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .center, spacing: 10) {
                         Text("Acerca de EcoLab")
                             .bold()
                             .font(.largeTitle)
                             .foregroundColor(.white)
                         
-                        Text("Desarrollado por")
+                        Text("¿Te animas a fabricar tus propias soluciones?")
                             .bold()
                             .font(.title2)
                             .foregroundColor(.white)
                         
-                        Text("Desliza para conocer más")
+                        Text("Convierte materiales comunes en ideas extraordinarias.")
                             .bold()
                             .foregroundColor(.white.opacity(0.7))
                     }
-                    .padding(.horizontal, 20)
                     .padding(.top, 60)
                 }
                 .background(Color.black)
@@ -38,7 +34,6 @@ struct AboutView: View {
                 .shadow(radius: 10)
                 .padding(.horizontal, 10)
                 
-                // Contenido del artículo
                 VStack(alignment: .leading, spacing: 15) {
                     Text("""
                     **EcoLab** es una iniciativa dedicada a promover la sostenibilidad y el cuidado del medio ambiente a través de proyectos educativos y comunitarios. Nuestro objetivo es empoderar a las comunidades con las herramientas y conocimientos necesarios para crear un impacto positivo en nuestro entorno.

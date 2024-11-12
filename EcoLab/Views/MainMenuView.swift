@@ -3,6 +3,7 @@ import SwiftUI
 struct MainMenuView: View {
     let onProjectsTap: () -> Void
     let onLearnTap: () -> Void
+    let onAboutTap: () -> Void
     @EnvironmentObject var appSettings: AppSettings
     var cornerRadius: CGFloat = 20
 
@@ -59,7 +60,7 @@ struct MainMenuView: View {
                         .cornerRadius(cornerRadius)
 
                         Button(action: {
-                            // Acción para el botón "Info"
+                            onAboutTap()
                         }) {
                             ButtonContent(imageName: "InfoIcon", title: "Info", subtitle: "Acerca de EcoLab", titleColor: .black, subtitleColor: .gray)
                         }
