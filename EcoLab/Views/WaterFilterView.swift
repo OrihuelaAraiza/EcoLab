@@ -163,21 +163,7 @@ struct WaterFilterView: View {
                     }
                     
                 case .buildingFilter:
-                    BuildingFilter01(
-                        onAdvance: {
-                            withAnimation {
-                                currentStep = .finish
-                            }
-                        },
-                        onBack: {
-                            withAnimation {
-                                currentStep = .bucketCheck
-                            }
-                        }
-                    )
-                    .transition(.opacity)
-                    .ignoresSafeArea() // Make it full screen
-
+                    EmptyView()
                 case .finish:
                     // Replace EmptyView with your final view and handle `onBack` accordingly
                     EmptyView()
