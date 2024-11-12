@@ -3,6 +3,7 @@ import SwiftUI
 struct MainMenuView: View {
     @Binding var showProyectsMenu: Bool
     @EnvironmentObject var appSettings: AppSettings
+    var cornerRadius: CGFloat = 20
 
     var body: some View {
         ZStack {
@@ -30,40 +31,40 @@ struct MainMenuView: View {
                                 showProyectsMenu = true
                             }
                         }) {
-                            ButtonContent(imageName: "LearningIcon", title: "Proyectos")
+                            ButtonContent(imageName: "ProjectsIcon", title: "Proyectos", subtitle: "Convierte materiales en ideas increíbles")
                         }
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
 
                         Button(action: {
                             // Acción para el botón "Aprende"
                         }) {
-                            ButtonContent(imageName: "LearningIcon", title: "Aprende")
+                            ButtonContent(imageName: "LearningIcon", title: "Aprende", subtitle: "Para cuidar a tu comunidad y al planeta")
                         }
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
                     }
 
                     HStack(spacing: 20) {
                         Button(action: {
                             // Acción para el botón "Próximamente"
                         }) {
-                            ButtonContent(imageName: "InfoIcon", title: "Próximamente")
+                            ButtonContent(imageName: "SoonIcon", title: "Próximamente", subtitle: "Proximamente")
                         }
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
 
                         Button(action: {
                             // Acción para el botón "Info"
                         }) {
-                            ButtonContent(imageName: "InfoIcon", title: "Info")
+                            ButtonContent(imageName: "InfoIcon", title: "Info", subtitle: "Acerca de EcoLab")
                         }
-                        .frame(width: 120, height: 120)
+                        .frame(width: 140, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
                     }
                 }
                 .padding()

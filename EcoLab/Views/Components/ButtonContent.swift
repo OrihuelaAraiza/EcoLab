@@ -2,6 +2,7 @@ import SwiftUI
 struct ButtonContent: View {
     let imageName: String
     let title: String
+    let subtitle: String
 
     var body: some View {
         GeometryReader { geometry in
@@ -19,11 +20,20 @@ struct ButtonContent: View {
                 Text(title)
                     .foregroundColor(.black)
                     .fontWeight(.bold)
-                    .multilineTextAlignment(.leading) // Alinear texto a la izquierda
+                    .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, maxHeight: geometry.size.height / 2, alignment: .leading)
                     .padding(.top, 10)
-                    .padding(.leading, 10) // Agregar padding a la izquierda
+                    .padding(.leading, 10)
+                
+                Text(subtitle)
+                    .font(.system(size: 8))
+                    .foregroundColor(.gray)
+                    .fontWeight(.light)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, maxHeight: geometry.size.height / 2, alignment: .leading)
+                    .padding(.leading, 10)
             }
+            .padding(.bottom, 10)
         }
     }
 }

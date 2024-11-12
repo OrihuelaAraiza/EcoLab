@@ -2,7 +2,8 @@ import SwiftUI
 
 struct ProyectsMenuView: View {
     @Binding var showProyectsMenu: Bool
-    @State private var showWaterFilter = false // Nueva variable de estado
+    @State private var showWaterFilter = false
+    var cornerRadius: CGFloat = 20
 
     var body: some View {
         ZStack {
@@ -18,39 +19,39 @@ struct ProyectsMenuView: View {
                             // Acción para "Filtro de agua"
                             showWaterFilter = true
                         }) {
-                            ButtonContent(imageName: "WaterIcon", title: "Filtro de agua")
+                            ButtonContent(imageName: "WaterIcon", title: "Filtro de agua", subtitle: "Un filtro de agua para el uso diario")
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
 
                         Button(action: {
                             // Acción para "Coming Soon"
                         }) {
-                            ButtonContent(imageName: "WaterIcon", title: "Coming Soon")
+                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon")
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
                     }
                     HStack(spacing: 20) {
                         Button(action: {
 
                         }) {
-                            ButtonContent(imageName: "SunIcon", title: "Coming Soon")
+                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon")
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
 
                         Button(action: {
 
                         }) {
-                            ButtonContent(imageName: "SunIcon", title: "Coming Soon")
+                            ButtonContent(imageName: "SoonIcon", title: "Coming Soon", subtitle: "Comming soon")
                         }
                         .frame(width: 240, height: 120)
                         .background(Color.white)
-                        .cornerRadius(10)
+                        .cornerRadius(cornerRadius)
                     }
 
                     Button(action: {
@@ -62,7 +63,7 @@ struct ProyectsMenuView: View {
                             .foregroundColor(.black)
                             .padding()
                             .background(Color.white)
-                            .cornerRadius(10)
+                            .cornerRadius(cornerRadius)
                     }
                     .padding(.top, 2)
                 }

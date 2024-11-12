@@ -30,7 +30,6 @@ struct WaterFilterView: View {
 
     var body: some View {
         ZStack {
-            // Cámara en el fondo
             CameraView(
                 cameraViewController: cameraViewController,
                 onBottleClassificationResult: nil,
@@ -43,7 +42,6 @@ struct WaterFilterView: View {
                 ProgressBar(currentStep: currentStep.progressStep)
                     .padding(.top, 20)
 
-                Spacer()
                 
                 switch currentStep {
                 case .intro:
@@ -149,8 +147,6 @@ struct WaterFilterView: View {
                     ARViewContainer()
                         .ignoresSafeArea()
                 }
-
-                Spacer()
 
             }
         }
