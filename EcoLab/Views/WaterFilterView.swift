@@ -7,23 +7,24 @@ struct WaterFilterView: View {
     @State private var currentStep: WaterFilterStep = .intro
     private let cameraViewController = CameraViewController()
     @EnvironmentObject var appSettings: AppSettings
-    
+    @Environment(\.presentationMode) var presentationMode // To control dismiss
+
     enum WaterFilterStep: Int {
         case intro = 0
         case materialInfo
-        case checklist
         case bottleCheck
         case bottleDetection
         case bucketCheck
         case bucketDetection
         case ar
+        case finish
         
         var progressStep: Int {
             switch self {
-            case .intro, .materialInfo, .checklist: return 0
-            case .bottleCheck, .bottleDetection: return 1
-            case .bucketCheck, .bucketDetection: return 2
-            case .ar: return 3
+            case .intro, .materialInfo: return 0
+            case .bottleCheck, .bottleDetection, .bucketCheck, .bucketDetection: return 1
+            case .ar: return 2
+            case .finish: return 3
             }
         }
     }
@@ -41,7 +42,6 @@ struct WaterFilterView: View {
             VStack {
                 ProgressBar(currentStep: currentStep.progressStep)
                     .padding(.top, 20)
-
                 
                 switch currentStep {
                 case .intro:
@@ -49,19 +49,14 @@ struct WaterFilterView: View {
                         withAnimation {
                             currentStep = .materialInfo
                         }
+                    }, onBack: {
+                        // Dismiss the WaterFilterView to return to ProyectsMenuView
+                        presentationMode.wrappedValue.dismiss()
                     })
                     .transition(.opacity)
 
                 case .materialInfo:
                     MaterialInfoView(onAdvance: {
-                        withAnimation {
-                            currentStep = .checklist
-                        }
-                    })
-                    .transition(.opacity)
-
-                case .checklist:
-                    ChecklistViewWrapper(onAllItemsChecked: {
                         withAnimation {
                             currentStep = .bottleCheck
                         }
@@ -142,12 +137,11 @@ struct WaterFilterView: View {
                         }
                         .transition(.opacity)
                     }
-
                 case .ar:
-                    ARViewContainer()
-                        .ignoresSafeArea()
+                    EmptyView()
+                case .finish:
+                    EmptyView()
                 }
-
             }
         }
     }

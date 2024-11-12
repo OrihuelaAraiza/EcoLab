@@ -2,7 +2,8 @@ import SwiftUI
 
 struct IntroView: View {
     var onAdvance: () -> Void
-    
+    var onBack: () -> Void // New back action
+
     var body: some View {
         VStack {
             Spacer()
@@ -18,21 +19,26 @@ struct IntroView: View {
             
             Spacer()
             
-            Spacer()
-            
-            Button("Avanzar") {
-                onAdvance()
-            }
-            .padding()
-            .background(Color.black)
-            .foregroundColor(.white)
-            .clipShape(Capsule())
-            
-            Spacer()
+            HStack {
+                Button("Regresar") { 
+                    onBack()
+                }
+                .padding()
+                .background(Color.black)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
 
+                Button("Avanzar") {
+                    onAdvance()
+                }
+                .padding()
+                .background(Color.black)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+            }
+            Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .cornerRadius(12)
     }
-    
 }
