@@ -1,7 +1,12 @@
 import SwiftUI
+import Lottie
 
 struct LearnEnergy: View {
     var onBack: () -> Void
+    
+    func rgbColor(red: Double, green: Double, blue: Double) -> Color {
+        return Color(red: red / 255.0, green: green / 255.0, blue: blue / 255.0)
+    }
     
     var body: some View {
         ScrollView {
@@ -10,9 +15,13 @@ struct LearnEnergy: View {
                     Image("luzBG")
                         .resizable()
                         .frame(width: .infinity, height: 410)
-                        .opacity(0.5)
+                        .opacity(0.2)
                     
                     VStack(alignment: .leading, spacing: 10) {
+                        LottieView(animationName: "BulbAnimation", loopMode: .loop)
+                                        .frame(width: 80, height: 80) // Tamaño del logo animado
+                                        .padding(.bottom, 10)
+                        
                         Text("Es muy sencillo cuidar de la luz")
                             .bold()
                             .font(.largeTitle)
@@ -30,7 +39,7 @@ struct LearnEnergy: View {
                     .padding(.horizontal, 70)
                     .padding(.top, 80)
                 }
-                .background(Color.black)
+                .background(rgbColor(red: 22, green: 60, blue: 62))
                 .shadow(radius: 20)
                 
                 VStack(alignment: .leading, spacing: 15) {

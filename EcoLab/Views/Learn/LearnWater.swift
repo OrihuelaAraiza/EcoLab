@@ -16,7 +16,7 @@ struct LearnWater: View {
                     Image("waterBG")
                         .resizable()
                         .frame(height: 410) // Ajusta la altura
-                        .opacity(0.5)
+                        .opacity(0.2)
                     
                     VStack(alignment: .leading, spacing: 10) { // Cambiado a .leading
                         // Logo con animación Lottie
@@ -41,7 +41,7 @@ struct LearnWater: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 80)
                 }
-                .background(.black)
+                .background(rgbColor(red: 22, green: 60, blue: 62))
                 .shadow(radius: 20)
 
                 // Contenido del artículo

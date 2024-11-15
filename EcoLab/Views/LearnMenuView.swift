@@ -112,7 +112,7 @@ struct LearnView: View {
                 Text("Regresar")
                     .foregroundColor(.white)
                     .padding()
-                    .background(Color.black)
+                    .background(rgbColor(red: 22, green: 60, blue: 62))
                     .cornerRadius(cornerRadius)
             }
             .padding(.top, 2)
