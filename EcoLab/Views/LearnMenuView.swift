@@ -8,6 +8,11 @@ struct LearnView: View {
     @State private var showingLearnEnergy = false // Variable de estado para presentar LearnEnergy
     @State private var showingLearnRecycle = false // Variable de estado para presentar LearnRecycle
     
+    // Función para generar un color RGB desde valores 0-255
+    func rgbColor(red: Double, green: Double, blue: Double) -> Color {
+        return Color(red: red / 255.0, green: green / 255.0, blue: blue / 255.0)
+    }
+
     var body: some View {
         VStack {
             // Encabezado
@@ -24,6 +29,8 @@ struct LearnView: View {
             }
             .padding(.bottom, 20)
             
+            Spacer() // Agregar un Spacer para empujar el contenido hacia el centro de la pantalla
+
             // Botones de Aprendizaje
             VStack(spacing: 20) {
                 HStack(spacing: 20) {
@@ -40,7 +47,7 @@ struct LearnView: View {
                         )
                     }
                     .frame(width: 200, height: 100)
-                    .background(Color("LearnCard"))
+                    .background(rgbColor(red: 22, green: 60, blue: 62)) // Color RGB para el fondo
                     .cornerRadius(12)
                     .sheet(isPresented: $showingLearnWater) { // Presentar LearnWater como una hoja
                         LearnWater(onBack: {
@@ -53,7 +60,7 @@ struct LearnView: View {
                         showingLearnEnergy = true // Activar la presentación de la hoja
                     }) {
                         ButtonContent(
-                            imageName: "careEnergyIcon", // Asegúrate de tener una imagen llamada "energyIcon" en tus assets
+                            imageName: "careEnergyIcon", // Asegúrate de tener una imagen llamada "careEnergyIcon" en tus assets
                             title: "Cuidado de energía",
                             subtitle: "Aprende cómo ahorrar energía en casa",
                             titleColor: .white,
@@ -61,7 +68,7 @@ struct LearnView: View {
                         )
                     }
                     .frame(width: 200, height: 100)
-                    .background(Color("LearnCard"))
+                    .background(rgbColor(red: 22, green: 60, blue: 62)) // Color RGB para el fondo
                     .cornerRadius(12)
                     .sheet(isPresented: $showingLearnEnergy) { // Presentar LearnEnergy como una hoja
                         LearnEnergy(onBack: {
@@ -82,7 +89,7 @@ struct LearnView: View {
                         )
                     }
                     .frame(width: 200, height: 100)
-                    .background(Color("LearnCard"))
+                    .background(rgbColor(red: 22, green: 60, blue: 62)) // Color RGB para el fondo
                     .cornerRadius(12)
                     .sheet(isPresented: $showingLearnRecycle) { // Presentar LearnRecycle como una hoja
                         LearnRecycle(onBack: {
@@ -92,8 +99,10 @@ struct LearnView: View {
                 }
             }
             .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity) // Asegura que los botones ocupen el máximo ancho disponible
+            .multilineTextAlignment(.center) // Alinea el texto de los botones al centro
             
-            Spacer()
+            Spacer() // Espacio para empujar el contenido hacia el centro
 
             Button(action: {
                 withAnimation {
@@ -119,3 +128,5 @@ struct LearnView_Previews: PreviewProvider {
         LearnView(onBack: {})
     }
 }
+
+

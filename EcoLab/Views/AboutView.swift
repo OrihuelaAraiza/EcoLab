@@ -39,34 +39,29 @@ struct AboutView: View {
                     **EcoLab** es una iniciativa dedicada a promover la sostenibilidad y el cuidado del medio ambiente a través de proyectos educativos y comunitarios. Nuestro objetivo es empoderar a las comunidades con las herramientas y conocimientos necesarios para crear un impacto positivo en nuestro entorno.
                     """)
                         .font(.body)
-                        .foregroundColor(.primary)
                         .padding(.horizontal, 20)
                     
                     Text("**Desarrollado por**")
                         .bold()
                         .font(.title2)
-                        .foregroundColor(.primary)
                         .padding(.horizontal, 20)
                     
                     // Lista de desarrolladores
                     VStack(alignment: .leading, spacing: 10) {
                         Text("• **Emiliano Montes Gómez**")
                             .font(.body)
-                            .foregroundColor(.primary)
                         
                         Text("• **Lizbeth Rocio Trujillo Salgado**")
                             .font(.body)
-                            .foregroundColor(.primary)
                         
                         Text("• **Diego Vitela**")
                             .font(.body)
-                            .foregroundColor(.primary)
                         
                         Text("• **Juan Pablo Orihuela**")
                             .font(.body)
-                            .foregroundColor(.primary)
                     }
                     .padding(.horizontal, 20)
+                    .foregroundColor(.black)
                     
                     // Información Adicional (Opcional)
                     Text("""
@@ -75,11 +70,11 @@ struct AboutView: View {
                     **Nuestra Visión:** Ser una referencia en iniciativas ambientales que inspiren cambios positivos a nivel local y global.
                     """)
                         .font(.body)
-                        .foregroundColor(.primary)
                         .padding(.horizontal, 20)
                 }
                 .padding(.horizontal, 120)
                 .padding(.bottom, 20)
+                .foregroundColor(.black)
             }
             .background(Color.white) // Fondo blanco para el contenido
             .overlay(

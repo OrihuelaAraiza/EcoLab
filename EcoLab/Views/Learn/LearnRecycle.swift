@@ -38,87 +38,87 @@ struct LearnRecycle: View {
                     Reciclar permite crear un objeto a partir de otro ya usado, contribuyendo a la disminución de desechos. Sin duda, es uno de los objetivos globales para frenar la contaminación y el cambio climático, dos problemas que afectan de sobremanera al planeta. Por eso, es fundamental que esta acción la fomentemos en el hogar. A continuación te compartimos algunas sugerencias: 
                     """)
                     .font(.body)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black) // Cambié a negro aquí
                     
                     VStack(alignment: .leading, spacing: 10) {
                         HStack(alignment: .top) {
                             Text("1.")
                                 .font(.body)
                                 .bold()
-                            Text("Compra de manera consciente. Haz un lista de lo que realmente necesitas, de esta manera evitarás comprar cosas innecesarias y ahorras dinero. ")
+                            Text("Compra de manera consciente. Haz un lista de lo que realmente necesitas, de esta manera evitarás comprar cosas innecesarias y ahorras dinero.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("2.")
                                 .font(.body)
                                 .bold()
-                            Text("Instala recipientes específicos donde puedas dividir la basura: orgánica, vidrio, cartón, plásticos y residuos tóxicos. ")
+                            Text("Instala recipientes específicos donde puedas dividir la basura: orgánica, vidrio, cartón, plásticos y residuos tóxicos.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("3.")
                                 .font(.body)
                                 .bold()
-                            Text("Separa correctamente los residuos e indica al recolector de basura como están clasificados. ")
+                            Text("Separa correctamente los residuos e indica al recolector de basura como están clasificados.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("4.")
                                 .font(.body)
                                 .bold()
-                            Text("Lava los envases y las latas antes de tirarlas para evitar vertidos tóxicos en el agua. ")
+                            Text("Lava los envases y las latas antes de tirarlas para evitar vertidos tóxicos en el agua.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("5.")
                                 .font(.body)
                                 .bold()
-                            Text("Utiliza las botellas de vidrio para guardar semillas, cereales, leguminosas o granos. También como floreros o jarras para agua. ")
+                            Text("Utiliza las botellas de vidrio para guardar semillas, cereales, leguminosas o granos. También como floreros o jarras para agua.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("6.")
                                 .font(.body)
                                 .bold()
-                            Text("La ropa que ya no usas la podrías ocupar para hacer una cobija, una cama o un juguete para tu mascota. Los pantalones de mezclilla transfórmalos en increíbles bolsas. ")
+                            Text("La ropa que ya no usas la podrías ocupar para hacer una cobija, una cama o un juguete para tu mascota. Los pantalones de mezclilla transfórmalos en increíbles bolsas.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("7.")
                                 .font(.body)
                                 .bold()
-                            Text("Las latas de aluminio las puedes convertir en macetas, en porta lápices o para colocar cubiertos. ¡Píntalas y hecha a volar tu imaginación! ")
+                            Text("Las latas de aluminio las puedes convertir en macetas, en porta lápices o para colocar cubiertos. ¡Píntalas y hecha a volar tu imaginación!")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                         
                         HStack(alignment: .top) {
                             Text("8.")
                                 .font(.body)
                                 .bold()
-                            Text("Las hojas que sobran de los cuadernos, únelas y forma uno nuevo. ")
+                            Text("Las hojas que sobran de los cuadernos, únelas y forma uno nuevo.")
                                 .font(.body)
-                                .foregroundColor(.primary)
+                                .foregroundColor(.black) // Cambié a negro aquí
                         }
                     }
                     
                     Text("""
-                    Es fundamental concienciar sobre la importancia de reciclar y reutilizar, al hacerlo los beneficios serian infinitos tanto para el planeta como para la especie humana.   
+                    Es fundamental concienciar sobre la importancia de reciclar y reutilizar, al hacerlo los beneficios serian infinitos tanto para el planeta como para la especie humana.
                     """)
                     .font(.body)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black) // Cambié a negro aquí
                 }
                 .padding(.horizontal, 120)
                 .padding(.bottom, 20)
@@ -143,3 +143,4 @@ struct LearnRecycle: View {
 #Preview{
     LearnRecycle(onBack: {})
 }
+
